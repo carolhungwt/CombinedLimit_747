@@ -120,6 +120,14 @@
 	<class name="RooMorphingPdf" />
         <function name="function th1fmorph" />
 	<class name="RooDoubleCBFast" />
+	<class name="HZZ4L_RooSpinZeroPdf_1D" />	
+	<class name="RooNCSplinePdfCore" />
+	<class name="RooNCSplinePdf_3D_fast" />
+	<class name="SplinePdf" />
+	<class name="Width_conv" />
+	<class name="Width_conv_integral" />
+	<class name="Width_conv_offshell" />
+	<class name="Width_integral" />	
 
 	<class name="CombDataSetFactory"  transient="true" />
 	<class name="DebugProposal"  transient="true" />

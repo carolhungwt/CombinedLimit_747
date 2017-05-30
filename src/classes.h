@@ -33,7 +33,15 @@
 #include "HiggsAnalysis/CombinedLimit/interface/RooParametricHist.h"
 #include "HiggsAnalysis/CombinedLimit/interface/GaussExp.h"
 #include "HiggsAnalysis/CombinedLimit/interface/RooDoubleCBFast.h"
-
+#include "HiggsAnalysis/CombinedLimit/interface/Width_conv.h"
+#include "HiggsAnalysis/CombinedLimit/interface/Width_conv_integral.h"
+#include "HiggsAnalysis/CombinedLimit/interface/Width_integral.h"
+#include "HiggsAnalysis/CombinedLimit/interface/Width_conv_offshell.h"
+#include "HiggsAnalysis/CombinedLimit/interface/HZZ4L_RooSpinZeroPdf_1D.h"
+#include "HiggsAnalysis/CombinedLimit/interface/RooNCSplinePdf_3D_fast.h"
+#include "HiggsAnalysis/CombinedLimit/interface/RooNCSplinePdfCore.h"
+#include "HiggsAnalysis/CombinedLimit/interface/Accumulators.h"
+#include "HiggsAnalysis/CombinedLimit/interface/SplinePdf.h"
 namespace {
     struct dictionary {
 	RooBernsteinFast<1> my_RooBernsteinFast_1;
