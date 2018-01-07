@@ -3,14 +3,14 @@ import re
 import os
 import sys
 
-paramspath = '/afs/cern.ch/user/w/wahung/work/public/CombineLimitDbkgkin/resolution_pkg/resolution/resolution/171112_reso_prod_170623_quad9_withmass_dependence/params'
+paramspath = 'params'
 npars=6
 paramslist = ['a1','a2','mean','n1','n2','sigma']
 channels=['4e','4mu','2e2mu']
 
 def chechpositivity(p0,p1):
 	positive= True
-	if(float(p0)+float(p1)*100<0 or float(p0)*float(p1)*140<0):		positive=False
+	if(float(p0)+float(p1)*100<0 or float(p0)+float(p1)*140<0):		positive=False
 	return positive
 
 def writeTotxt(chcard):

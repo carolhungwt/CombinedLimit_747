@@ -30,7 +30,7 @@ n2_CB =  2.4719 +/- 1.5765 L(0 - 20)
 sigma_CB =  3.5865 +/- 0.073318 L(0 - 500)
 """
 
-chans = ['2e2mu'] #, '4e', '4mu']
+chans = ['2e2mu', '4e', '4mu']
 maxCat=9
 jsonfile='failed_categ'
 
@@ -57,17 +57,31 @@ class paramTxt(object):
 			else:				raise Exception(fileloc+' not backed up yet')
 
 	def _readmh125param(self):
-		mh125fileloc = 'singleMassFit_Quad{maxCat}/SingleMassFit_ResoParam_MH125_{chan}_Category_{cat}.txt'.format(maxCat=maxCat, chan=self.chan, cat=self.cat)
-		if not os.path.exists(mh125fileloc):
-			raise Exception(mh125fileloc+' not found')
-		tempdict = {}
-		with open(mh125fileloc,'r') as f:
-			lines = f.readlines()
+		tempval,tempdict = 0,{}
+		with open('massarray_quad9.txt','r') as fread:	
+			lines = fread.readlines()
+			headerkey = '{chan}_cat{cat}='.format(chan=self.chan,cat=self.cat)
 			for line in lines:
-				line = line.split()
-				if line:
-					tempdict[line[0]]=line[2]
-		return tempdict
+				if headerkey in line:
+					line  = line.split()
+					masses = line[1:]
+			for i,mass in enumerate(masses):
+				mh125fileloc = 'singleMassFit_Quad{maxCat}/SingleMassFit_ResoParam_MH{mass}_{chan}_Category_{cat}.txt'.format(mass=mass,maxCat=maxCat, chan=self.chan, cat=self.cat)
+				if not os.path.exists(mh125fileloc):
+					raise Exception(mh125fileloc+' not found')
+				with open(mh125fileloc,'r') as f:
+					lines = f.readlines()
+					for line in lines:
+						line = line.split()
+						if line and i==0:
+							tempdict[line[0]]=float(line[2])
+						elif line:
+							tempdict[line[0]]+=float(line[2])
+						else:
+							continue
+			for key,item in tempdict.iteritems():
+				tempdict[key]=item/len(masses)
+			return tempdict
 
 	def readAndreplace(self, param):
 		key = param+'_CB'
@@ -83,9 +97,9 @@ class paramTxt(object):
 					line = line.split()
 					if line  and not done and stem in line[0]:
 						if not first:
-							val = self._mh125paramsdict[key]
-							first=1
+							val = self._mh125paramsdict[key]	
 							linetowrite = '{stem}_{first}:  {value}'.format(stem=stem, first=first, value=val)
+							first=1
 						elif first:
 							val=0
 							done = True
@@ -103,18 +117,20 @@ def readjson():
 		with open(jsonfile+'.json','r') as f:
 			data = json.load(f)
 	except:
-		raise IOError(jsonfile+' not found')
+		raise IOError(jsonfile+'.json not found')
 	else:
 		return data
 
 
-import re, os, json
+import re, os, json, sys
 if __name__=='__main__':
 	data = readjson()
-	print data
+	curchan = str(sys.argv[1])
+	curcat = str(sys.argv[2])
+#	print data
 	for chan, subdict in data.iteritems():	
-		for cat, paramslist in subdict.iteritems():
-			print chan, cat, paramslist
+		for cat, paramslist in subdict.iteritems():	
+			if not (chan == curchan and curcat == cat):	continue
 			tempparamTxt = paramTxt(chan, cat)
 			for param in paramslist:
 				tempparamTxt.readAndreplace(param)	

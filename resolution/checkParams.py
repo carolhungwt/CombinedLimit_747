@@ -21,7 +21,7 @@
 2e2mu_cat8_sigma_param_1: 2.459571E-02
 """
 
-params = ['a1', 'a2', 'mean', 'n1', 'n2', 'sigma']
+params = ['a1', 'a2', 'n1', 'n2', 'sigma']
 chans = ['2e2mu', '4e', '4mu']
 maxCat=9
 
