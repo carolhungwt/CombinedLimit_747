@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
-import os
-import sys
+import os, sys, argparse
 
 class datacard():
 	def __init__(self,tag,cat):
@@ -36,13 +35,15 @@ class datacard():
 		tmpl_string = tmpl_string.replace('<rate>', rate_str)
 		return tmpl_string
 
-	def write_datacards(self,fdir):
+	def write_datacards(self,fdir,splineloc,bkgloc):
 		tmpldir = '{0}/hzz4l_{1}_cat{2}_13TeV_onshell.txt'.format(fdir,self.tag,self.cat)
 		#assert os.path.exists(tmpldir)
 		fnew_card = open(tmpldir,'w')
 		string_to_write = self.get_string(fdir)
 		string_to_write = self.write_cat(string_to_write)
 		string_to_write = self.write_rate(string_to_write)
+		string_to_write = string_to_write.replace('<splinelocation>',splineloc)
+		string_to_write = string_to_write.replace('<bkglocation>',bkgloc)
 		fnew_card.write(string_to_write)
 
 
@@ -50,11 +51,16 @@ channels=["4e","4mu","2e2mu"]
 #curdir = os.system("echo $PWD")
 curdir = os.getcwd()
 all_cards=[]
-
+parser = argparse.ArgumentParser()
+parser.add_argument('-s','--splineloc',required=True)
+parser.add_argument('-b','--bkgloc',required=True)
+args = parser.parse_args()
+splineloc = os.path.abspath(args.splineloc)
+bkgloc = os.path.abspath(args.bkgloc)
 for chan in channels:
 	for dcat in range(0,9):
 		new_member = datacard(chan,dcat)
-		new_member.write_datacards(curdir)
+		new_member.write_datacards(curdir,splineloc,bkgloc)
 		#all_cards.append(new_member)
 
 

@@ -2,18 +2,18 @@ imax	3	number	of	bins
 jmax	11	number	of	processes	minus	1													
 kmax	18	number	of	nuisance	parameters														
 ----------------------------------------------------------------------------------------------------------------------------------																			
-shapes	ggH_untagged	ch1	/afs/cern.ch/user/w/wahung/work/public/CombineLimitDbkgkin/CMSSW_7_4_7/src/HiggsAnalysis/CombinedLimit/spline_prod/171016_spline_prod_170623_quad9_no_int_SBonly/spline_WS_withCat_quad9/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
-shapes	qqH_untagged	ch1	/afs/cern.ch/user/w/wahung/work/public/CombineLimitDbkgkin/CMSSW_7_4_7/src/HiggsAnalysis/CombinedLimit/spline_prod/171016_spline_prod_170623_quad9_no_int_SBonly/spline_WS_withCat_quad9/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
-shapes	VH_untagged	ch1	/afs/cern.ch/user/w/wahung/work/public/CombineLimitDbkgkin/CMSSW_7_4_7/src/HiggsAnalysis/CombinedLimit/spline_prod/171016_spline_prod_170623_quad9_no_int_SBonly/spline_WS_withCat_quad9/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
-shapes	*	ch1 	/afs/cern.ch/user/w/wahung/work/CMSSW_8_0_26_patch1/src/HiggsAnalysis/CombinedLimit/Mass-Width/testBKg/171121_sig_bkg_tmpl_withDmass_quad9/workspace_2d_bkg_onshell_withCat/hzz4l_4e0S_cat<cat>_13TeV.input_func.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
-shapes	ggH_vbf2j	ch2	/afs/cern.ch/user/w/wahung/work/public/CombineLimitDbkgkin/CMSSW_7_4_7/src/HiggsAnalysis/CombinedLimit/spline_prod/171016_spline_prod_170623_quad9_no_int_SBonly/spline_WS_withCat_quad9/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
-shapes	qqH_vbf2j	ch2	/afs/cern.ch/user/w/wahung/work/public/CombineLimitDbkgkin/CMSSW_7_4_7/src/HiggsAnalysis/CombinedLimit/spline_prod/171016_spline_prod_170623_quad9_no_int_SBonly/spline_WS_withCat_quad9/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
-shapes	VH_vbf2j	ch2	/afs/cern.ch/user/w/wahung/work/public/CombineLimitDbkgkin/CMSSW_7_4_7/src/HiggsAnalysis/CombinedLimit/spline_prod/171016_spline_prod_170623_quad9_no_int_SBonly/spline_WS_withCat_quad9/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
-shapes	*	ch2	/afs/cern.ch/user/w/wahung/work/CMSSW_8_0_26_patch1/src/HiggsAnalysis/CombinedLimit/Mass-Width/testBKg/171121_sig_bkg_tmpl_withDmass_quad9/workspace_2d_bkg_onshell_withCat/hzz4l_4e0S_cat<cat>_13TeV.input_func.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
-shapes	ggH_vhhad	ch3	/afs/cern.ch/user/w/wahung/work/public/CombineLimitDbkgkin/CMSSW_7_4_7/src/HiggsAnalysis/CombinedLimit/spline_prod/171016_spline_prod_170623_quad9_no_int_SBonly/spline_WS_withCat_quad9/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
-shapes	qqH_vhhad	ch3	/afs/cern.ch/user/w/wahung/work/public/CombineLimitDbkgkin/CMSSW_7_4_7/src/HiggsAnalysis/CombinedLimit/spline_prod/171016_spline_prod_170623_quad9_no_int_SBonly/spline_WS_withCat_quad9/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
-shapes	VH_vhhad	ch3	/afs/cern.ch/user/w/wahung/work/public/CombineLimitDbkgkin/CMSSW_7_4_7/src/HiggsAnalysis/CombinedLimit/spline_prod/171016_spline_prod_170623_quad9_no_int_SBonly/spline_WS_withCat_quad9/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
-shapes	*	ch3	/afs/cern.ch/user/w/wahung/work/CMSSW_8_0_26_patch1/src/HiggsAnalysis/CombinedLimit/Mass-Width/testBKg/171121_sig_bkg_tmpl_withDmass_quad9/workspace_2d_bkg_onshell_withCat/hzz4l_4e0S_cat<cat>_13TeV.input_func.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
+shapes	ggH_untagged	ch1	<splinelocation>/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
+shapes	qqH_untagged	ch1	<splinelocation>/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
+shapes	VH_untagged	ch1	<splinelocation>/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
+shapes	*	ch1 	<bkglocation>/hzz4l_4e0S_cat<cat>_13TeV.input_func.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
+shapes	ggH_vbf2j	ch2	<splinelocation>/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
+shapes	qqH_vbf2j	ch2	<splinelocation>/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
+shapes	VH_vbf2j	ch2	<splinelocation>/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
+shapes	*	ch2	<bkglocation>/hzz4l_4e0S_cat<cat>_13TeV.input_func.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
+shapes	ggH_vhhad	ch3	<splinelocation>/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
+shapes	qqH_vhhad	ch3	<splinelocation>/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
+shapes	VH_vhhad	ch3	<splinelocation>/4e_spline_WS_cat<cat>.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
+shapes	*	ch3	<bkglocation>/hzz4l_4e0S_cat<cat>_13TeV.input_func.root	w:$PROCESS	w:$PROCESS_$SYSTEMATIC														
 ----------------------------------------------------------------------------------------------------------------------------------																			
 bin	ch1	ch2	ch3																
 observation	-1	-1	-1																
