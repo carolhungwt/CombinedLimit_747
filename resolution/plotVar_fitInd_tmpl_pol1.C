@@ -43,7 +43,7 @@ TGraphErrors* makegr(int n=1,double x[]={0},double y[]={0},double ex[]={0},doubl
   gr->GetXaxis()->SetTitle(xtitle);
   gr->GetYaxis()->SetTitle(ytitle);
   fit->SetLineColor(lineColor);  
-  gr->Fit("fit");
+  gr->Fit("fit", "mw");
   TCanvas* c = new TCanvas("c", "c", 1000, 10, 800, 800);
   c->cd();
   gr->SetMarkerStyle(4);
@@ -119,12 +119,6 @@ Double_t mass_err[n_MH]={0};
   double mean_initParam[npars]={105,140,0,0,0,0,0};
   double sigma_initParam[npars]={105,140,0,0,0,0,0};
 
-		FILE* file = fopen("params/reso.txt", "a+");
-		fprintf(file, "//<channel>_Category<cat>\n");
-		fclose(file);
-
-string filename = "params/reso_<channel>_cat<cat>.txt"; 
-if(exists_test(filename))	system(Form("rm %s",filename.c_str()));	
 
 TGraph* gr3 = makegr(n_MH,MH,a1,mass_err,a1_err,22,4,"doubleCB param","mass","a1",a1_initParam);
 TGraph* gr4 = makegr(n_MH,MH,a2,mass_err,a2_err,23,6,"doubleCB param","mass","a2",a2_initParam);

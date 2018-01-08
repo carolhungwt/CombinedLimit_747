@@ -46,20 +46,18 @@ def getParamDict(chan, cat):
 
 def checkBound(intercept, slope, bound):
 	value = intercept+slope*bound
-	if value<0:	return True	
+	if value<0:	
+		print value
+		return True	
 	else:		return False
 
-def checkParams(param, paramlist, range=[105,140]):
+def checkParams(param, paramlist, ranges=[110,140]):
 	intercept, slope = paramlist
 	failed = False
-	for bound in range:
+	for bound in ranges:
 		if not failed:
 			failed = checkBound(intercept, slope, bound)
-	if failed:
-#		print param+" will be replaced by value at mH 125"
-		return failed
-	else:
-		pass
+	return failed
 
 def tojson(faileddict, filename):
 	with open(filename+'.json','w+') as fout:
@@ -79,6 +77,7 @@ if __name__=='__main__':
 			if paramdict==0:	continue
 			for param in params:
 				if checkParams(param, paramdict[param]):
+					print chan, cat, param, paramdict[param]
 					failedlist.append(param)
 					needtoreplace = True
 			if needtoreplace:	

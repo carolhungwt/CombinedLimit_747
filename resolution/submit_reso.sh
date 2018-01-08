@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #channels=(4e 2e2mu 4mu)
-channels=(2e2mu 4mu 4e)
+channels=(4e 4mu 2e2mu)
 icat=0
 quad=9
 cur=$PWD
@@ -42,7 +42,8 @@ for ch in ${channels[@]}; do
 dmasscat=${icat}
 while [ ${dmasscat} -lt $quad ]; do
 	#obtain the mass array from .txt, possible for fine-tuning 
-#	rm params/individual_fit_param_${ch}_cat${dmasscat}.txt
+	rm params/individual_fit_param_${ch}_cat${dmasscat}.txt
+	if [ ! -f "massarray_quad9.txt" ]; then python firstScreening.py; fi
 	massarray=$(echo `awk 'BEGIN{FS="=";OFS=" ";} $0~/'${ch}'_cat'${dmasscat}'=/ {print$2;}' massarray_quad9.txt`)
 	massstring=$(echo `awk 'BEGIN{OFS=",";} $0~/'${ch}'_cat'${dmasscat}'=/ {$1="";print$0;}' massarray_quad9.txt| cut -d',' -f2-`)
 	echo ${massstring}

@@ -10,7 +10,7 @@ channels=['4e','4mu','2e2mu']
 
 def chechpositivity(p0,p1):
 	positive= True
-	if(float(p0)+float(p1)*100<0 or float(p0)+float(p1)*140<0):		positive=False
+	if(float(p0)+float(p1)*110<0 or float(p0)+float(p1)*140<0):		positive=False
 	return positive
 
 def writeTotxt(chcard):
