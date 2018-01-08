@@ -10,7 +10,7 @@ do
 done
 for vbf_cate in 0 1 2
 do
-for ch in 4e 4mu 2e2mu
+for ch in 4e
 do
 	root -l -q -b clean_quad9_mH125.c\(\"${ch}\",${vbf_cate},${onshell},${quad}\)
 	root -l -q -b vbf_quad9_mH125.c\(\"${ch}\",${vbf_cate},${onshell},${quad}\)
