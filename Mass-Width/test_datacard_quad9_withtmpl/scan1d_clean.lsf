@@ -1,0 +1,14 @@
+#!/bin/bash
+#workdir=$CMSSW_BASE/src/width
+folder=$4
+root=$5
+workdir=$6
+cd $CMSSW_BASE/src
+eval `scramv1 runtime -sh`
+cd $workdir/$folder
+#cd batch_onshell 
+echo $1 $2 $3 
+
+
+combine -M MultiDimFit $root -n "scan_1d_"$3 -t -1 --saveToys --setPhysicsModelParameters mean_pole=125,sigma_pole=0.004,r=1.,rvbf_ggh=1. --setPhysicsModelParameterRanges mean_pole=122.5,127.5:sigma_pole=0.0001,5.0001 --redefineSignalPOIs sigma_pole  --algo=grid --points=50 --firstPoint $1 --lastPoint $2 --minimizerStrategy=0 -v 7 --saveSpecifiedNuis all --saveSpecifiedFunc=r --X-rtd TMCSO_AdaptivePseudoAsimov=100000 --X-rtd TMCSO_PseudoAsimov=0
+
