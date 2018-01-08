@@ -56,7 +56,7 @@ void plotOnC(TCanvas* c, RooPlot* plot, const char *tag,int rval);
 
 void make_rpdfWS_withCat(TString workdir, TString tag, int cat,int quad, int cate_vbf, int prod_cate){
 	clock_t tStart = clock();
-	char* inputDir = Form("/afs/cern.ch/user/w/wahung/work/public/CMSSW_7_1_5_bak/src/HiggsAnalysis/CombinedLimit/Mass_Width_dbkgkin_category/prepareInputs/171016_clean_quad%d_prod_170623_mH125_signal_only",quad);
+	char* inputDir = "../signal_preparation";
 	char* tag2 = (char*) tag.Data();
 	TString tag1="";
 	if(cate_vbf==0)		tag1="0jet_";
@@ -105,7 +105,7 @@ void make_rpdfWS_withCat(TString workdir, TString tag, int cat,int quad, int cat
 
 
 	vector<RooAbsReal*> vec_pdfs;
-	TString curdir = "/afs/cern.ch/user/w/wahung/work/public/CombineLimitDbkgkin/CMSSW_7_4_7/src/HiggsAnalysis/CombinedLimit/spline_prod/171016_spline_prod_170623_quad9_no_int_SBonly";
+	TString curdir = ".";
 	vec_pdfs.push_back(pdfr1);
 	if(prod_cate==0)	prodtag="ggH_";
 	RooWorkspace* rpdfWS = createWS(vec_pdfs,workdir+"/rpdfWS_withCat/"+tag+"_rpdfWS_cat"+to_string(cat)+"_"+prodtag+tag1+".root", projvars);
