@@ -55,7 +55,10 @@ RooPlot* quickplot(RooWorkspace* wo, vector<RooAbsPdf*> spPDFs, vector<RooRealVa
 void plotOnC(TCanvas* c, RooPlot* plot, const char *tag,int rval);
 
 void make_rpdfWS_withCat(TString workdir, TString tag, int cat,int quad, int cate_vbf, int prod_cate){
+	
+	// For timing the script
 	clock_t tStart = clock();
+
 	char* inputDir = "../signal_preparation";
 	char* tag2 = (char*) tag.Data();
 	TString tag1="";
@@ -101,7 +104,7 @@ void make_rpdfWS_withCat(TString workdir, TString tag, int cat,int quad, int cat
 		totalpts+=ndim[i];
 	}
 	//Make 2D spline for signal
-	RooNCSplineCore* pdfr1 = make_2D_spPDF(projvars, projvals, ndim, ws,"r1",1,cate_vbf,prod_cate);
+	RooNCSplineCore* pdfr1 = make_3D_spPDF(projvars, projvals, ndim, ws,"r1",1,cate_vbf,prod_cate);
 
 
 	vector<RooAbsReal*> vec_pdfs;
@@ -114,6 +117,10 @@ void make_rpdfWS_withCat(TString workdir, TString tag, int cat,int quad, int cat
 
 
 	return;
+	// Timing the script
+	string Timefile = Form("%s/Timefile.txt",workdir.Data());
+	auto t = std::time(nullptr);
+	auto tm = *std::localtime(&t);
 }
 
 RooNCSpline_1D_fast* make_1D_spPDF(RooRealVar projvar, vector<double> projval, int ndim, RooWorkspace* w, TString tag, int cate_vbf, int prod_cate){
@@ -166,48 +173,54 @@ RooNCSpline_1D_fast* make_1D_spPDF(RooRealVar projvar, vector<double> projval, i
 RooNCSpline_2D_fast* make_2D_spPDF(std::vector<RooRealVar*> projvars, vector<vector<double>> projvals, vector<int> ndim, RooWorkspace* w,  TString tag ,int r,int cate_vbf,int prod_cate){
 	double* dim = new double[projvars.size()];
 	vector<RooAbsPdf*> pdfs(3);
-	vector<double> m4l, sigmas, fcns;
+
 	TString prod_tag;
 
 	if(prod_cate==0) 		prod_tag = "ggH";
 	else if(prod_cate==1)	{	prod_tag = "qqH";	w->var("rvbf_ggh")->setVal(1);}
 	else 			{	prod_tag = "VH";	w->var("rvbf_ggh")->setVal(1);}
-	w->var("r")->setVal(1);
-	RooAbsReal *temppdf = (RooAbsReal*) w->pdf(prod_tag.Data()); 
 
+	for(int i=0; i<3; i++){
+		w->var("r")->setVal(i);
+		pdfs[i] = w->pdf(prod_tag.Data());
+	}
 	RooRealVar *mreco = (RooRealVar*) w->var("mreco");
-	RooRealVar *sigma= (RooRealVar*) w->var("sigma_pole");	
-//	RooNCSplineFactory_2D* spFac =  new RooNCSplineFactory_2D(*(projvars.at(1)),*(projvars.at(2)));
-	RooNCSplineFactory_2D* spFac =  new RooNCSplineFactory_2D(*(projvars.at(2)),*(projvars.at(1)));
-	
+	RooRealVar *mh= (RooRealVar*) w->var("mean_pole");	
+	RooNCSplineFactory_2D* spFac =  new RooNCSplineFactory_2D(*(projvars.at(0)),*(projvars.at(1)));
+
 	double fcn = 0.;
 	double temp = 0.;
 	double mu0, mu1, mu2;
 	ofstream out("crosscheck"+tag+".txt");
 	vector<splineTriplet_t> points;
-	w->var("mean_pole")->setConstant(false);
-	w->var("mean_pole")->setVal(125);
-	w->var("mean_pole")->setConstant(true);
-		for(int ix=0; ix<ndim[2]; ix++){
-			dim[0]=projvals.at(2).at(ix);
-	    w->var("sigma_pole")->setConstant(false);
-
-            w->var("sigma_pole")->setVal(dim[0]);
-            w->var("sigma_pole")->setConstant(true);
+	w->var("sigma_pole")->setConstant(false);
+	w->var("sigma_pole")->setVal(0.004);
+	w->var("sigma_pole")->setConstant(true);
+		for(int ix=0; ix<ndim[0]; ix++){
+			dim[0]=projvals.at(0).at(ix);
+			w->var("mean_pole")->setConstant(false);
+            w->var("mean_pole")->setVal(dim[0]);
+            w->var("mean_pole")->setConstant(true);
 			for (int iy=0; iy<ndim[1]; iy++){
        			dim[1]=projvals.at(1).at(iy);
        			w->var("mreco")->setConstant(false);
         		w->var("mreco")->setVal(dim[1]);
         		w->var("mreco")->setConstant(true);
-		
-    			fcn = temppdf->getVal();
-		m4l.push_back(dim[1]);	sigmas.push_back(dim[0]);	fcns.push_back(fcn);
-    
+		if (r==1){
+			mu1 = pdfs[1]->getVal(); 
+//        		mu0 = pdfs[0]->getVal();	mu1 = pdfs[1]->getVal(); 	mu2= pdfs[2]->getVal();
+//        		temp = (1/sqrt(2))*mu0-(1+sqrt(2))*mu1+(1+1/sqrt(2))*mu2;
+			temp = mu1;
+			}
+		else{
+			temp = pdfs[0]->getVal();
+		}
+    			fcn = temp;
+//    		    cout << dim[0]<<" "<<dim[1]<<" "<<fcn<<" \n";
 				points.push_back(splineTriplet_t(dim[0], dim[1], fcn));
 				}
 		}
 	spFac -> setPoints(points);
-
 	RooNCSpline_2D_fast* spPDF = spFac->getFunc();
 	spPDF->SetNameTitle(tag,tag);
 	return spPDF;
@@ -361,7 +374,7 @@ vector<double> set_grid(RooRealVar* var){
 	double inc = 0.2;
 	int gridnum = 10;
 	if (varName=="mean_pole"){
-		inc = 0.25;
+		inc = 0.05;
 		double min_mH = 122.;
 		double max_mH = 128.;
 		gridnum = (max_mH-min_mH)/inc+1;
@@ -370,10 +383,18 @@ vector<double> set_grid(RooRealVar* var){
 		}	
 	}	else if(varName == "mreco"){
 		double temp_vals[]={105.,106., 107.,108., 109., 110.,111.,112., 113., 114., 115.,116., 117.,118., 119., 120.,121., 122., 123., 124., 125., 126., 127., 128., 129.5, 131., 132.5, 134., 135.5, 137., 138.5, 140.};
+//		inc = 0.5;
+//		double min_m4l = 105.;
+//		double max_m4l = 140.;
+//		gridnum = (max_m4l-min_m4l)/inc+1;
+//		double temp_vals[gridnum];
+//		for(int i=0; i<gridnum; i++){
+//			gridMarkers.push_back(min_m4l+inc*i);
+//		}
 		int size = sizeof(temp_vals)/sizeof(double);
 		gridMarkers = convert_arr_to_vec(temp_vals, size);
 	}	else if(varName == "sigma_pole"){
-		double temp_vals[]={0.0001,0.001, 0.002,.00407,0.007,0.01,0.05,0.08,0.1,0.15, 0.2,0.3, 0.5,0.7,0.9, 1.,1.15,1.25,1.4, 1.5,1.6,1.75, 2.,2.1,2.25,2.4,2.5,2.6,2.75,2.9,3.,3.1,3.25,3.4,3.5,3.6,3.75,3.9,4.,4.25,4.5,4.75, 5.};//,6.,7.,8.5, 10.};
+		double temp_vals[]={0.0001,0.001, 0.002,.00407,0.007,0.01,0.05,0.08,0.1,0.15, 0.2,0.3, 0.5,0.7,0.9, 1.,1.25,1.4, 1.5,1.6,1.75,1.9, 2.,2.1,2.25,2.4,2.5,2.6,2.75,2.9,3.,3.1,3.25,3.4,3.5,3.6,3.75,3.9,4.,4.25,4.5,4.75, 5.};//,6.,7.,8.5, 10.};
 		int size = sizeof(temp_vals)/sizeof(double);
 //		double *temp_vals=temp;
 		gridMarkers = convert_arr_to_vec(temp_vals, size);
