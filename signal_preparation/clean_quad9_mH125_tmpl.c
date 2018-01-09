@@ -10,12 +10,12 @@ using namespace TMath;
 using namespace RooFit;
 
 
-void dosomething(TString chan ="2e2mu",int cate_vbf =0, bool onshell=true, int quad=3,int iCat=0){
+void dosomething(TString chan ="2e2mu",int cate_vbf =0, bool onshell=true, int quad=3,int iCat=0, TString workdir="."){
  // for (int iCat=0; iCat<quad; iCat++){
 
   TString filename;
-  if (onshell) filename = "workspace125_onshell/hzz"+chan+Form("_13TeV.input_func_%djet_cat%d.root",cate_vbf, iCat);
-  else filename = "workspace125/hzz"+chan+Form("_13TeV.input_func_%djet_cat%d.root",cate_vbf, iCat);
+  if (onshell) filename = workdir+"/workspace125_onshell/hzz"+chan+Form("_13TeV.input_func_%djet_cat%d.root",cate_vbf, iCat);
+  else filename = workdir+"/workspace125/hzz"+chan+Form("_13TeV.input_func_%djet_cat%d.root",cate_vbf, iCat);
   TFile* fwor=new TFile(filename, "recreate");
   fwor->cd();
 
@@ -160,8 +160,8 @@ for(int kk=0; kk<6; kk++)	std::cout<<dcbPara_2nd[kk][0]<<endl;}
   TString pdfn = "2e2mu";
   if (chan!="2e2mu") pdfn = "4e";
   RooKeysPdf* pdfbkg = (RooKeysPdf*)wbkg->pdf("pdfbkg_"+pdfn);
-
-  RooConstVar* ggzznorm= new RooConstVar("ggzznorm"+chan+Form("%d", iCat), "", lumi*ggzz_xsec);
+  float zero_bkg=0;
+  RooConstVar* ggzznorm= new RooConstVar("ggzznorm"+chan+Form("%d", iCat), "", lumi*ggzz_xsec*zero_bkg);
   RooExtendPdf pdf_ggzz("pdf_ggzz"+chan+Form("%d", iCat), "pdf_ggzz"+chan+Form("%d", iCat), *pdfbkg, *ggzznorm);
 
   RooConstVar* xnorm= new RooConstVar("xnorm"+chan+Form("%d", iCat), "", lumi*x_xsec);
@@ -439,13 +439,13 @@ std::cout<<"***********************************"<<endl;
   
 }
 
-void clean_quad9_mH125(TString chan="4e", int cat_vbf=0, bool onshell=true, int quad=9){
-  gSystem->Exec("mkdir -p ./workspace125_onshell/../workspace125/");
+void clean_quad9_mH125(TString chan="4e", int cat_vbf=0, bool onshell=true, int quad=9, TString workdir="."){
+//  gSystem->Exec("mkdir -p ./workspace125_onshell/../workspace125/");
   gROOT->ProcessLine("gSystem->AddIncludePath(\"-I$ROOFITSYS/include/\")");
   gROOT->ProcessLine("gSystem->Load(\"libRooFit\")");
   gROOT->ProcessLine("gSystem->Load(\"libHiggsAnalysisCombinedLimit.so\")");
 for(int iCat=0; iCat<quad; iCat++){
-  dosomething(chan, cat_vbf, onshell,quad,iCat);
+  dosomething(chan, cat_vbf, onshell,quad,iCat, workdir);
 }
   //dosomething("2e2mu",0,0);
   //dosomething("4e",0,0);
