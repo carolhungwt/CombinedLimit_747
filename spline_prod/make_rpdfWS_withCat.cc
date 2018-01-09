@@ -54,7 +54,7 @@ RooWorkspace* createWS(vector<RooAbsReal*> pdfs,TString rootname, vector<RooReal
 RooPlot* quickplot(RooWorkspace* wo, vector<RooAbsPdf*> spPDFs, vector<RooRealVar*> projvars, const unsigned int chosen, vector<float> varset, int rval);
 void plotOnC(TCanvas* c, RooPlot* plot, const char *tag,int rval);
 
-void make_rpdfWS_withCat(TString workdir, TString tag, int cat,int quad, int cate_vbf, int prod_cate){
+void do_make_rpdfWS_withCat(TString workdir, TString tag, int cat,int quad, int cate_vbf, int prod_cate){
 	
 	// For timing the script
 	clock_t tStart = clock();
@@ -121,109 +121,6 @@ void make_rpdfWS_withCat(TString workdir, TString tag, int cat,int quad, int cat
 	string Timefile = Form("%s/Timefile.txt",workdir.Data());
 	auto t = std::time(nullptr);
 	auto tm = *std::localtime(&t);
-}
-
-RooNCSpline_1D_fast* make_1D_spPDF(RooRealVar projvar, vector<double> projval, int ndim, RooWorkspace* w, TString tag, int cate_vbf, int prod_cate){
-	// 1D spline only deals with bkg
-	int r=0;
-	RooAbsPdf* pdf;
-	if(prod_cate==0){
-		w->var("r")->setVal(r);
-		pdf = w->pdf("ggH"); 
-	}
-	else if(prod_cate==1){
-		w->var("r")->setVal(r);
-		w->var("rvbf_ggh")->setVal(1);
-		pdf = w->pdf("qqH");
-	}
-	else {
-		w->var("r")->setVal(r);
-		w->var("rvbf_ggh")->setVal(1);
-		pdf = w->pdf("VH");
-	}
-
-	double temp = 0.;
-	RooNCSplineFactory_1D* spFac =  new RooNCSplineFactory_1D(projvar);
-	double fcn =0.;
-	//vector<double> ptVal;
-	vector<pair<RooNCSplineCore::T,RooNCSplineCore::T>> points;
-	for(int ix=0; ix<ndim; ix++){
-		temp = projval.at(ix);
-		w->var("mreco")->setConstant(false);
-		w->var("mreco")->setVal(temp);
-		w->var("mreco")->setConstant(true);
-		//return 0;
-		fcn = pdf->getVal();
-		points.push_back(pair<double,double> (temp,fcn));
-//		cout<<temp<<"   "<<fcn<<endl;
-	}
-	// plot sth
-	RooPlot* plot = projvar.frame();
-	TCanvas* c1;
-	c1->cd();	
-	spFac->setPoints(points);
-	RooNCSpline_1D_fast* spPDF = spFac->getFunc();
-	spPDF->SetNameTitle(tag, tag);
-	spPDF->plotOn(plot);
-	plot->Draw();
-	c1->SaveAs("~/www/check_r0.png");
-	return spPDF;
-}
-
-RooNCSpline_2D_fast* make_2D_spPDF(std::vector<RooRealVar*> projvars, vector<vector<double>> projvals, vector<int> ndim, RooWorkspace* w,  TString tag ,int r,int cate_vbf,int prod_cate){
-	double* dim = new double[projvars.size()];
-	vector<RooAbsPdf*> pdfs(3);
-
-	TString prod_tag;
-
-	if(prod_cate==0) 		prod_tag = "ggH";
-	else if(prod_cate==1)	{	prod_tag = "qqH";	w->var("rvbf_ggh")->setVal(1);}
-	else 			{	prod_tag = "VH";	w->var("rvbf_ggh")->setVal(1);}
-
-	for(int i=0; i<3; i++){
-		w->var("r")->setVal(i);
-		pdfs[i] = w->pdf(prod_tag.Data());
-	}
-	RooRealVar *mreco = (RooRealVar*) w->var("mreco");
-	RooRealVar *mh= (RooRealVar*) w->var("mean_pole");	
-	RooNCSplineFactory_2D* spFac =  new RooNCSplineFactory_2D(*(projvars.at(0)),*(projvars.at(1)));
-
-	double fcn = 0.;
-	double temp = 0.;
-	double mu0, mu1, mu2;
-	ofstream out("crosscheck"+tag+".txt");
-	vector<splineTriplet_t> points;
-	w->var("sigma_pole")->setConstant(false);
-	w->var("sigma_pole")->setVal(0.004);
-	w->var("sigma_pole")->setConstant(true);
-		for(int ix=0; ix<ndim[0]; ix++){
-			dim[0]=projvals.at(0).at(ix);
-			w->var("mean_pole")->setConstant(false);
-            w->var("mean_pole")->setVal(dim[0]);
-            w->var("mean_pole")->setConstant(true);
-			for (int iy=0; iy<ndim[1]; iy++){
-       			dim[1]=projvals.at(1).at(iy);
-       			w->var("mreco")->setConstant(false);
-        		w->var("mreco")->setVal(dim[1]);
-        		w->var("mreco")->setConstant(true);
-		if (r==1){
-			mu1 = pdfs[1]->getVal(); 
-//        		mu0 = pdfs[0]->getVal();	mu1 = pdfs[1]->getVal(); 	mu2= pdfs[2]->getVal();
-//        		temp = (1/sqrt(2))*mu0-(1+sqrt(2))*mu1+(1+1/sqrt(2))*mu2;
-			temp = mu1;
-			}
-		else{
-			temp = pdfs[0]->getVal();
-		}
-    			fcn = temp;
-//    		    cout << dim[0]<<" "<<dim[1]<<" "<<fcn<<" \n";
-				points.push_back(splineTriplet_t(dim[0], dim[1], fcn));
-				}
-		}
-	spFac -> setPoints(points);
-	RooNCSpline_2D_fast* spPDF = spFac->getFunc();
-	spPDF->SetNameTitle(tag,tag);
-	return spPDF;
 }
 
 
@@ -425,5 +322,13 @@ void setVar(RooWorkspace* w, const int var, const float Val){
         w->var(curvar)->setVal(Val);
         w->var(curvar)->setConstant(true);
 }
-
-
+void make_rpdfWS_withCat(TString workdir=".", TString tag="4e", int cat=0,int quad=9){
+  gROOT->ProcessLine("gSystem->AddIncludePath(\"-I$ROOFITSYS/include/\")");
+  gROOT->ProcessLine("gSystem->Load(\"libRooFit\")");
+  gROOT->ProcessLine("gSystem->Load(\"libHiggsAnalysisCombinedLimit.so\")");
+for(int cate_vbf=0; cate_vbf<3; cate_vbf++){
+   for(int prod_cate=0; prod_cate<3; prod_cate++){
+         do_make_rpdfWS_withCat(workdir,tag, cat,quad, cate_vbf, prod_cate);
+        }
+    }
+}
