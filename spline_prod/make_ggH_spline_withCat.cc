@@ -1,4 +1,7 @@
 #include <iostream>
+#include "RooHistPdf.h"
+#include "RooProdPdf.h"
+#include "RooDataHist.h"
 #include <utility>
 #include <fstream>
 #include <cmath>
@@ -10,6 +13,7 @@
 #include "TAxis.h"
 #include "TH1.h"
 #include "TGaxis.h"
+#include "TFile.h"
 #include "TString.h"
 #include "TChain.h"
 #include "RooGlobalFunc.h"
@@ -25,16 +29,19 @@
 #include "RooPlot.h"
 #include "RooNumIntConfig.h"
 #include "RooWorkspace.h"
-#include <ZZMatrixElement/MELA/interface/Mela.h>
-#include <ZZMatrixElement/MELA/interface/ScalarPdfFactory_HVV.h>
 #include "HiggsAnalysis/CombinedLimit/interface/RooNCSplineFactory_1D.h"
 #include "HiggsAnalysis/CombinedLimit/interface/Width_conv.h"
+#include "HiggsAnalysis/CombinedLimit/interface/RooFuncPdf.h"
+#include "HiggsAnalysis/CombinedLimit/interface/FastTemplate.h"
+#include "HiggsAnalysis/CombinedLimit/interface/RooRealFlooredSumPdf.h"
+#include "HiggsAnalysis/CombinedLimit/interface/FastTemplateFunc.h"
 #include "HiggsAnalysis/CombinedLimit/interface/Width_integral.h"
 #include "HiggsAnalysis/CombinedLimit/interface/SplinePdf.h"
 #include "HiggsAnalysis/CombinedLimit/interface/RooNCSpline_2D_fast.h"
 #include "HiggsAnalysis/CombinedLimit/interface/RooNCSplineCore.h"
 #include "HiggsAnalysis/CombinedLimit/interface/RooNCSplineFactory_2D.h"
 #include "HiggsAnalysis/CombinedLimit/interface/RooNCSplineFactory_3D.h"
+
 using namespace RooFit;
 using namespace std;
 
@@ -45,30 +52,39 @@ RooArgList extract_pdf(RooWorkspace* w);
 void setVar(RooWorkspace* w, const int var, const float Val);
 RooFormulaVar* writeFormula(RooWorkspace* w, RooRealVar* r, TString tag,int cat, int cate_vbf, int prod_cate);
 
-void make_ggH_spline_withCat(TString tag, int cat,int quad){
+void do_make_ggH_spline_withCat(TString tag, int cat,int quad, TString workdir="./rpdfWS_withCat"){
 
 	RooWorkspace* wo, *ws;
-	TFile* fm, *f;
+	TFile* fm, *f, *fr1;
 	vector<RooAbsReal*> vec_pdfs;
-	RooAbsReal* temppdf;
+	RooAbsReal* temppdfr1;
 	RooFormulaVar* tempcoeff;
-	RooRealSumPdf* ggH;
-	RooFormulaVar *ggH_norm;
-	TString pdfname;
-	RooRealVar *r= new RooRealVar("r","signal strength",1.,0.000,1000);
 
+	RooFormulaVar *ggH_norm;
+	TString pdfname, tmplname;
+	RooRealVar *r= new RooRealVar("r","signal strength",1.,0.000,1000);
+	RooConstVar *constone = new RooConstVar("const1","const1",1.);
+	TH2F* th2ftmpl;
+	RooRealVar *dbkg = new RooRealVar("dbkg_kin","dbkg_kin",0.,1.);
+	dbkg->setBins(10);
+
+	RooArgSet argset;
+    	fm = new TFile(Form("/eos/user/w/wahung/Mass_Width_Measurement/spline_WS_withCat_quad9/%s_spline_WS_cat%d.root",tag.Data(),cat));
+	ws = (RooWorkspace*) fm->Get("w");
+	ws->exportToCint("ws");
+	//ws->Print();
 	TFile ftest(Form("spline_WS_withCat_quad%d/%s_spline_WS_cat%d.root",quad,tag.Data(),cat),"recreate");
 	RooWorkspace* newWS = new RooWorkspace("w", "");
 	newWS->addClassDeclImportDir("../interface/");
 	newWS->importClassCode(RooNCSplineCore::Class(),true);
 	newWS->importClassCode(RooNCSpline_2D_fast::Class(), true);
 	newWS->importClassCode(RooNCSpline_3D_fast::Class(), true);
-
-	
+	TFile* ftmpl = new TFile("../TemplateBuilder/Normalized_spline_tmpl.root");
+	RooWorkspace* wtmpl = (RooWorkspace*) ftmpl->Get("w");	
  	for(int cate_vbf=0; cate_vbf<3; cate_vbf++){
  		for(int prod_cate=0; prod_cate<3; prod_cate++){
 
-	char* inputDir = "/afs/cern.ch/user/w/wahung/work/public/CombineLimitDbkgkin/CMSSW_7_4_7/src/HiggsAnalysis/CombinedLimit/signal_clean";
+	char* inputDir = "../signal_preparation";
  	
 	cout<< inputDir<<endl;
         char* tag2 = (char*) tag.Data();
@@ -80,15 +96,21 @@ void make_ggH_spline_withCat(TString tag, int cat,int quad){
         if(prod_cate==0)        prodtag="";
         else if(prod_cate==1)   prodtag="vbf_";
         else if(prod_cate==2)   prodtag="vh_";
-    	fm = new TFile(Form("%s/workspace125_onshell/hzz%s_13TeV.input_func_%s%scat%d.root",inputDir,tag2,prodtag.Data(),tag1.Data(),cat));
-	TString workdir="./rpdfWS_withCat";
+
+//	TString workdir="./rpdfWS_withCat";
+
+	fr1 = new TFile(Form("%s/%s_rpdfWS_cat%d_ggH_%s.root",workdir.Data(), tag.Data(), cat,tag1.Data()));
+
+	RooWorkspace* wr1 = (RooWorkspace*) fr1->Get("w");
+	
 	if(prod_cate==0)        prodtag="ggH_";
 	f = new TFile(Form("%s/%s_rpdfWS_cat%d_%s%s.root",workdir.Data(), tag.Data(), cat,prodtag.Data(),tag1.Data()));
 	//4e_rpdfWS_cat0.root
 	wo = (RooWorkspace*) f->Get("w");
+	cout<<wr1<<endl;
 
-	ws = (RooWorkspace*) fm->Get("w");
 
+	
     if(cate_vbf==0)         tag1="_untagged";
     else if(cate_vbf==1)    tag1="_vbf2j";
     else if(cate_vbf==2)    tag1="_vhhad";
@@ -96,30 +118,56 @@ void make_ggH_spline_withCat(TString tag, int cat,int quad){
 	else if (prod_cate==1)		pdfname="qqH";
 	else if (prod_cate==2)		pdfname="VH";
 	pdfname += tag1;
-
-
-
-	temppdf = (RooAbsReal*) wo->obj("r1");
-	if(prod_cate==0)	temppdf->SetNameTitle("r1_ggH","r1_ggH");
-	else 			temppdf->SetNameTitle("r1_qqH","r1_qqH");
+	RooRealVar* mreco = (RooRealVar*) wo->var("mreco");
+	argset.add(*mreco);
+	argset.add(*dbkg);
+	temppdfr1 = (RooAbsReal*) wo->obj("r1");	
+	temppdfr1->SetName(Form("r1_%s_cat%d_%s%s",tag.Data(),cat,pdfname.Data(),tag.Data()));
 	tempcoeff = writeFormula(ws,r, tag,cat,cate_vbf,prod_cate);
+	
+	//ggH_norm = (RooFormulaVar*) ws->obj(Form("%s%s_norm",pdfname.Data(),tag1.Data()));
 
+	RooRealFlooredSumPdf *temppdf = new RooRealFlooredSumPdf(Form("r1_%s_cat%d_%s%s",tag.Data(),cat,pdfname.Data(),tag.Data()),"",RooArgList(*temppdfr1),RooArgList(*constone));	
 
+//**************** Extract template from root file*************************
+
+	if(prod_cate==0)		tmplname="ggzz";
+	else				tmplname="vbf";
+	cout<<Form("%s_sig_%s",tmplname.Data(),tag.Data())<<endl;	
+	
+	TH2F* th2ftmpl = (TH2F*) ftmpl->Get(Form("%s_sig_%s",tmplname.Data(),tag.Data()));
+	RooDataHist *th2fdatahist = new RooDataHist(Form("datahist_%s_sig_%s",tmplname.Data(),tag.Data()),"",argset,th2ftmpl);
+	RooHistPdf *th2fhistpdf = new RooHistPdf(Form("histpdf_%s_sig_%s",tmplname.Data(),tag.Data()),"",argset,*th2fdatahist);
+//	RooProdPdf* tempprodpdf = new RooProdPdf("tempprodpdf","tempprodpdf",*temppdf, *tmplfuncpdf);
 
 	
-	ggH = new RooRealSumPdf(pdfname.Data(), pdfname.Data(), RooArgList(*temppdf), RooArgList(*tempcoeff)); 
+	if(prod_cate==0)	temppdf->SetNameTitle("r1_ggH","");
+	else 			temppdf->SetNameTitle("r1_qqH","");
+
+	
+//	ggH = new RooRealSumPdf(pdfname.Data(), pdfname.Data(), RooArgList(*tempprodpdf), RooArgList(*tempcoeff)); 
+	RooProdPdf *ggH = new RooProdPdf(Form("%s_prodpdf",pdfname.Data()),"", *temppdf, Conditional(*th2fhistpdf,*dbkg));
+//	RooRealFlooredSumPdf *ggH = new RooRealFlooredSumPdf(pdfname.Data(),"",RooArgList(*ggH_prod),RooArgList(*ggH_norm));
+		
+	ggH->SetNameTitle(pdfname.Data(), pdfname.Data());
 	ggH_norm = new RooFormulaVar(Form("%s_norm",pdfname.Data()),Form("%s_norm",pdfname.Data()),"@0",RooArgList(*tempcoeff));	
 
 	ftest.cd();
 	newWS->import(*ggH,RooFit::RecycleConflictNodes());
+	
+	cout<<ggH->GetName()<<endl;
+	cout<<ggH_norm->GetName()<<endl;
 	newWS->import(*ggH_norm,RooFit::RecycleConflictNodes());
-
-
+	
+	f->Close();
 
 	}
 }
+
 	ftest.WriteTObject(newWS);
 	ftest.Close();
+	ftmpl->Close();
+	fm->Close();
 	newWS->Print();
 	return;
 
@@ -145,30 +193,34 @@ RooFormulaVar* writeFormula(RooWorkspace* w, RooRealVar* r, TString tag,int cat,
 	//Pdf = r0 * f0 * (r/2. - 3./2.*sqrt(r)+1) + r1*f1 *(-r+2*sqrt(r)) + r2*f2*(r/2.-sqrt(r)/2.); 
 	
 
-
-	cout<<prod_cate<<endl;
+//	RooRealVar* r = w->var("r");	
+	//cout<<prod_cate<<endl;
 	RooAbsReal* bkg_integral2e2mu0Nominal;
-
+//	RooConstVar* bkg_integral2e2mu0Nominal;
 	RooAbsReal* sig_integral2e2mu0Nominal;
 	RooAbsReal* int_integral2e2mu0Nominal;
 	RooFormulaVar* rvbf;
 	if(prod_cate==0){
-
+//		bkg_integral2e2mu0Nominal= (RooAbsReal*) w->obj(Form("bkg_integral%s%d_%djetNominal",tag.Data(),cat,cate_vbf)); 
 		sig_integral2e2mu0Nominal= (RooAbsReal*) w->obj(Form("sig_integral%s%d_%djetNominal",tag.Data(),cat,cate_vbf)); 
-
+//		int_integral2e2mu0Nominal= (RooAbsReal*) w->obj(Form("int_integral%s%d_%djetNominal",tag.Data(),cat,cate_vbf)); 
 		r = (RooRealVar*) w->var("r");
 	}
 	else if (prod_cate==1){
 		cout <<Form("vbfsig_integral%s%d_%djet",tag.Data(),cat,cate_vbf)<<endl;
                 sig_integral2e2mu0Nominal= (RooAbsReal*) w->obj(Form("vbfsig_integral%s%d_%djet",tag.Data(),cat,cate_vbf)); 
+//vbfsig_integral4e3_0jet
+    //            int_integral2e2mu0Nominal= (RooAbsReal*) w->obj(Form("vbfint_integral%s%d_%djet",tag.Data(),cat,cate_vbf)); 	
 		rvbf = (RooFormulaVar*) w->obj("rvbf");
 	}
 	else if (prod_cate==2){
+//		bkg_integral2e2mu0Nominal= new RooConstVar(Form("bkg_integral%s%d_%djet",tag.Data(),cat,cate_vbf),Form("bkg_integral%s%d_%djet",tag.Data(),cat,cate_vbf),0);
+     //           bkg_integral2e2mu0Nominal= (RooAbsReal*) w->obj(Form("bkg_integral%s%d_%djet",tag.Data(),cat,cate_vbf)); 
                 sig_integral2e2mu0Nominal= (RooAbsReal*) w->obj(Form("vhsig_integral%s%d_%djet",tag.Data(),cat,cate_vbf)); 
-
+       //         int_integral2e2mu0Nominal= (RooAbsReal*) w->obj(Form("vhint_integral%s%d_%djet",tag.Data(),cat,cate_vbf)); 
 		rvbf = (RooFormulaVar*) w->obj("rvbf");
 	}
-
+	//cout<<"bkg_integral4e0Nominal:   "<<bkg_integral2e2mu0Nominal->getVal()<<endl;
 	RooFormulaVar* f1= new RooFormulaVar("f1","f1", "@0", RooArgList(*sig_integral2e2mu0Nominal));
 
 	f1->SetNameTitle(Form("f1%s_cat%d_vbf%d_prod%d",tag.Data(),cat,cate_vbf,prod_cate),"f1"+tag);
@@ -185,6 +237,8 @@ RooFormulaVar* writeFormula(RooWorkspace* w, RooRealVar* r, TString tag,int cat,
 }
 	return f1_final;
 
+//	form_list.add(*f1_final);
+//	return form_list;
 }
 
 
@@ -235,3 +289,11 @@ void setVar(RooWorkspace* w, const int var, const float Val){
 		w->var(curvar)->setVal(Val);
 		w->var(curvar)->setConstant(true);
 }
+
+void make_ggH_spline_withCat(TString tag, int cat,int quad, TString workdir="./rpdfWS_withCat"){
+  
+  do_make_ggH_spline_withCat( tag, cat, quad, workdir);
+
+}
+
+
