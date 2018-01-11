@@ -18,6 +18,9 @@
 //#include "HZZ2L2QRooPdfs.h"
 //#include "HZZ2L2QRooPdfs.cc"
 #include "HiggsAnalysis/CombinedLimit/interface/HZZ2L2QRooPdfs.h"
+#include "HiggsAnalysis/CombinedLimit/interface/RooDoubleCBFast.h"
+#include "HiggsAnalysis/CombinedLimit/interface/Category.h"
+#include "HiggsAnalysis/CombinedLimit/interface/Discriminants.h"
 //#include "ZZAnalysis/AnalysisStep/interface/Category.h"
 //#include "Math/GenVector/LorentzVector.h"
 //#include "Math/GenVector/PtEtaPhiM4D.h"
@@ -88,7 +91,7 @@ using namespace RooFit;
   vector<TString> files;
   char inputfile[1000];
 
-  RooDoubleCB* DCBall[100];
+  RooDoubleCBFast* DCBall[100];
   RooConstVar* xmgen[100];
   RooRealVar* mean_ind[100];
   RooRealVar* sigma_ind[100];
@@ -99,9 +102,9 @@ using namespace RooFit;
   RooFitResult* fitres[100];
 
 //  string inputDir =;
-  TString inputDir = "/afs/cern.ch/user/w/wahung/work/public/CombineLimitDbkgkin/resolution_pkg/resolution_Quad9/Quad9_tree";
+//  TString inputDir = "/afs/cern.ch/user/w/wahung/work/public/CombineLimitDbkgkin/resolution_pkg/resolution_Quad9/Quad9_tree";
 
-  TString TreeinputDir="/eos/user/w/wahung/Mass_Width_Measurement/Data_Sample/";
+//  TString TreeinputDir="/eos/user/w/wahung/Mass_Width_Measurement/Data_Sample/";
 
   const int maxCat = 9;
 //  int inputfiles[]={125};

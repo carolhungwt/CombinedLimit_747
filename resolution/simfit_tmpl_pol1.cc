@@ -126,7 +126,7 @@ void simfit_<ch>_cat<cat>(char* channel="4e", int cat=0){
 
 	cout<<"xMin: "<<xMin[i]<<"   xMax: "<<xMax[i]<<endl;
 
-    DCBall[i] = new RooDoubleCB("DCBall","Double Crystal ball",*x,*pmean[i],*psigma[i],*pa1[i],*pn1[i],*pa2[i],*pn2[i]);
+    DCBall[i] = new RooDoubleCBFast("DCBall","Double Crystal ball",*x,*pmean[i],*psigma[i],*pa1[i],*pn1[i],*pa2[i],*pn2[i]);
     dcbth1fs[i] = (TH1F*) DCBall[i]->createHistogram(x->GetName(), 100);
     dcbth1fs[i]->SetName(Form("DCBall_reso_TH1F_MH%d",massBin[i]));
     rs[i] = DCBall[i];
@@ -184,7 +184,7 @@ void simfit_<ch>_cat<cat>(char* channel="4e", int cat=0){
     fnew->WriteTObject(dcbth1fs[i]);
     ws = new RooWorkspace("w","");
     ws->addClassDeclImportDir("$CMSSW_BASE/interface/");
-    ws->importClassCode(RooDoubleCB::Class(),true);
+    ws->importClassCode(RooDoubleCBFast::Class(),true);
     ws->import(*DCBall[i],RooFit::RecycleConflictNodes());
     fnew->WriteTObject(ws);
     fnew->Close();

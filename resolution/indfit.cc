@@ -17,7 +17,7 @@ void indfit(char* channel="4e", int cat=0,int bin =150){
 
     sprintf(tempmass,"mh%d",massBin[i]);
     sprintf(tempmass2,"massrc == massrc::mh%d",massBin[i]);
-    DCBall[i] = new RooDoubleCB("DCBall","Double Crystal ball",x,*mean_ind[i],*sigma_ind[i],*a1_ind[i],*n1_ind[i],*a2_ind[i],*n2_ind[i]);
+    DCBall[i] = new RooDoubleCBFast("DCBall","Double Crystal ball",x,*mean_ind[i],*sigma_ind[i],*a1_ind[i],*n1_ind[i],*a2_ind[i],*n2_ind[i]);
     cout << "Individual fit, mass: "<<massBin[i]<<" , range: [" << xMin[i] << " , " << xMax[i] << "]." << endl<<endl;
 
     fitres[i] = (RooFitResult*)DCBall[i]->fitTo(*dataset_sub[i],Range(xMin[i],xMax[i]),Strategy(2),NumCPU(8),Save(true),SumW2Error(1));
@@ -47,7 +47,9 @@ void indfit(char* channel="4e", int cat=0,int bin =150){
     dataset_sub[i]->plotOn(xframe,DataError(RooAbsData::SumW2), MarkerStyle(kOpenCircle), MarkerSize(1.1));
     DCBall[i]->plotOn(xframe,LineColor(col),Slice(massrc,tempmass),ProjWData(massrc,*dataset));
 
+    
     RooHist* hpull = xframe->pullHist();
+    hpull->SetName("hpull");
     RooPlot* frame2 = x.frame(Range(xMin[i],xMax[i]),Title("Pull Distribution")) ;
     frame2->addPlotable(hpull,"P");
 
@@ -64,11 +66,37 @@ void indfit(char* channel="4e", int cat=0,int bin =150){
     sprintf(filename,"singleMassFit/Resolution_MH%d_%s_singleMassFit.pdf",massBin[i],channel);
     c1->SaveAs(filename);
     */
- 
+
+    TFile *f = new TFile(Form("singleMassFit_Quad%d/Resolution_MH%d_%s_Category_%d_singleMassFit.root",maxCat,massBin[i],channel,cat),"recreate");
+    f->cd();
+    RooWorkspace* w = new RooWorkspace("w");
+    w->import(*hpull);
+    w->import(*DCBall[i]);
+    f->WriteTObject(w);
+    f->Close();
     sprintf(filename,"singleMassFit_Quad%d/Resolution_MH%d_%s_Category_%d_singleMassFit.png",maxCat,massBin[i],channel,cat);
     c1->SaveAs(filename);
     sprintf(filename,"singleMassFit_Quad%d/Resolution_MH%d_%s_Category_%d_singleMassFit.pdf",maxCat,massBin[i],channel,cat);
     c1->SaveAs(filename);
+//    cout<<hpull->Chisquare()<<endl;
+// Check Chi-square 
+// RooRealVar* xsel = (RooRealVar*) x.clone("xsel");
+//  xsel->setRange(-10.,10); 
+//    x.setRange(-100,100);
+    TH1* hdataset = (TH1*) dataset_sub[i]->createHistogram("reso",1000);
+    hdataset->GetXaxis()->SetLimits(-10,10);
+    TH1* hdcb = (TH1*) DCBall[i]->createHistogram("reso",1000);
+    hdcb->GetXaxis()->SetLimits(-10,10);
+    double chi2test = hdataset->Chi2Test(hdcb,"uw chi2/ndf p");
+    TF1 *zero = new TF1("zero","0",-5,5);
+    ofstream fs("checkchi2.txt",ofstream::app|ofstream::out);
+    double chi2pull = hpull->Chisquare(zero,"r");
+//    if(channel=="4e"&&chi2test>1000 || channel=="4mu"&&chi2test<0.01||channel=="2e2mu"){
+    if(chi2pull>150&&chi2pull<1000){
+    	fs<<massBin[i]<<" "<<channel<<" "<<cat<<" "<<hpull->Chisquare(zero,"r")<<endl;
+    	cout<<"chi2test: "<<chi2test<<endl;
+    }
+//    cout<<"chi2 rooabsreal: "<<chi2->getVal()<<endl;
 	}
   //}
 }
