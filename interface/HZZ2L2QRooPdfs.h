@@ -41,7 +41,9 @@ class RooDoubleCB : public RooAbsPdf {
 public:
   RooDoubleCB();
   RooDoubleCB(const char *name, const char *title,
-	      RooAbsReal& _x,
+	      //RooAbsReal& _x,
+	      RooAbsReal& _xreco,
+	      RooAbsReal& _xgen,
 	      RooAbsReal& _mean,
 	      RooAbsReal& _width,
 	      RooAbsReal& _alpha1,
@@ -57,7 +59,9 @@ public:
 
 protected:
 
-  RooRealProxy x ;
+  //RooRealProxy x ;
+  RooRealProxy xreco;
+  RooRealProxy xgen;
   RooRealProxy mean;
   RooRealProxy width;
   RooRealProxy alpha1;
