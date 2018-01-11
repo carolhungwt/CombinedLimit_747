@@ -8,10 +8,10 @@
 using namespace std;
 using namespace RooFit;
 
-void dosomething(TString chan ="2e2mu",unsigned int iCat =0,unsigned int cate_vbf=1,bool onshell=true, int quad=3){
+void dosomething(TString chan ="2e2mu",unsigned int iCat =0,unsigned int cate_vbf=1,bool onshell=true, int quad=3, TString workdir="."){
 	int nparampar=2;
 	double lumi = 35.9;
-	double ggzz_xsec = 0.488;
+	double ggzz_xsec = 0.488*0;
 	double x_xsec = 0.312*1.108; 
 
 	if(onshell){
@@ -30,7 +30,7 @@ void dosomething(TString chan ="2e2mu",unsigned int iCat =0,unsigned int cate_vb
 	}
 		else{
 			if(chan!="2e2mu"){
-			ggzz_xsec=0.239;
+			ggzz_xsec=0.239*0;
 			x_xsec = 0.167*1.108;; 
 			}
 		}
@@ -386,9 +386,9 @@ else{
 	mreco->Print("v");
 	cout << mreco->getBins();
 
-	TString filename = "workspace125/hzz4l_"+chan+Form("_13TeV.input_func_vbf_%djet_cat%d.root",cate_vbf,iCat);
+	TString filename = workdir+"/workspace125/hzz4l_"+chan+Form("_13TeV.input_func_vbf_%djet_cat%d.root",cate_vbf,iCat);
 	if(onshell)
-		filename = "workspace125_onshell/hzz"+chan+Form("_13TeV.input_func_vbf_%djet_cat%d.root",cate_vbf, iCat);
+		filename = workdir+"/workspace125_onshell/hzz"+chan+Form("_13TeV.input_func_vbf_%djet_cat%d.root",cate_vbf, iCat);
 	TFile *f=new TFile(filename,"recreate");	
 	f->cd();
 	w.Write();
@@ -397,11 +397,11 @@ else{
 	
 }
 
-void vbf_quad9_mH125(TString chan="4e", unsigned int cate_vbf=1, bool onshell=1,int quad=3){
+void vbf_quad9_mH125(TString chan="4e", unsigned int cate_vbf=1, bool onshell=1,int quad=3, TString workdir = "."){
 	gROOT->ProcessLine("gSystem->AddIncludePath(\"-I$ROOFITSYS/include/\")");
 	gROOT->ProcessLine("gSystem->Load(\"libRooFit\")");
 	gROOT->ProcessLine("gSystem->Load(\"libHiggsAnalysisCombinedLimit.so\")");
-	for (int iCat=6;iCat<quad;iCat++){
-		dosomething(chan,iCat,cate_vbf, onshell,quad);
+	for (int iCat=0;iCat<quad;iCat++){
+		dosomething(chan,iCat,cate_vbf, onshell,quad,workdir);
 	}
 }

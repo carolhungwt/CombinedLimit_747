@@ -34,14 +34,11 @@ void dosomething(TString chan ="2e2mu",unsigned int cate_vbf=1,bool onshell=true
 		}
 
 	gStyle->SetOptStat(0);
-
 <dcbPara_4e_2nd>
 
 <dcbPara_4mu_2nd>
 
 <dcbPara_2e2mu_2nd>
-
-
 
 	double eff[3][11]={
 //VBF->0p_4e_param_0:
@@ -107,10 +104,10 @@ void dosomething(TString chan ="2e2mu",unsigned int cate_vbf=1,bool onshell=true
 	RooWorkspace *wbkg =( RooWorkspace*)fpdfbkg->Get ("w"); 
 
 	RooRealVar* mzz = new RooRealVar("ZZMass","M_{ZZ} (GeV)",125,low,high);
-//	RooRealVar* mzz = wbkg->var("ZZMass"); 
+	//RooRealVar* mzz = wbkg->var("ZZMass"); 
 	RooRealVar* mreco= new RooRealVar("mreco","M_{ZZ} (GeV)",125,low_reco,high_reco);
 	RooRealVar* mdiff= new RooRealVar("mdiff","M_{ZZ} (GeV)",125,low_reco,high_reco);
-  RooFormulaVar* x = new RooFormulaVar("xreso", "xreso", "@0-@1",RooArgList(*mreco,*mzz));
+
 	RooRealVar *r= new RooRealVar("r","signal strength",1.,0.000,1000);
 	RooRealVar *rvbf_ggh= new RooRealVar("rvbf_ggh","rvb_ggh",1.,0.000,1000);
 	RooFormulaVar *rvbf= new RooFormulaVar("rvbf","@0*@1",RooArgSet(*r,*rvbf_ggh));
@@ -141,7 +138,7 @@ void dosomething(TString chan ="2e2mu",unsigned int cate_vbf=1,bool onshell=true
 	TString pdfn = "2e2mu";
 	if(chan!="2e2mu")
 		pdfn = "4e";
-	RooKeysPdf *pdfbkg =(RooKeysPdf*)  wbkg->pdf("vbfpdfbkg_"+pdfn);
+	RooKeysPdf *pdfbkg = wbkg->pdf("vbfpdfbkg_"+pdfn);
 
 	float zero_bkg = 0;
 	RooConstVar *ggzznorm= new RooConstVar("vhbkgnorm"+chan+Form("%d_%djet",iCat,cate_vbf),"",lumi*ggzz_xsec*zero_bkg);
@@ -268,9 +265,9 @@ std::cout<<"***********************************"<<endl;
 
   RooFormulaVar* sigma_p0_up = new RooFormulaVar("sigma_p0_up", "", "@0+0.2*@0", *sigma_p0_2nd);
   RooFormulaVar* sigma_p0_dn = new RooFormulaVar("sigma_p0_dn", "", "@0-0.2*@0", *sigma_p0_2nd);
-  RooDoubleCB dcrReso(Form("dcrReso_%s_iCat%d_%djet",chan.Data(), iCat, cate_vbf), "Double Crystal ball ", *x, *mean_p0_2nd, *sigma_p0_2nd, *a1_p0_2nd, *n1_p0_2nd, *a2_p0_2nd, *n2_p0_2nd);
-  RooDoubleCB dcrReso_up(Form("dcrReso_%s_iCat%d_%djet_up",chan.Data(), iCat, cate_vbf), "dcb up", *x, *mean_p0_2nd, *sigma_p0_up, *a1_p0_2nd, *n1_p0_2nd, *a2_p0_2nd, *n2_p0_2nd);
-  RooDoubleCB dcrReso_dn(Form("dcrReso_%s_iCat%d_%djet_dn",chan.Data(),iCat, cate_vbf), "dcb dn", *x, *mean_p0_2nd, *sigma_p0_dn, *a1_p0_2nd, *n1_p0_2nd, *a2_p0_2nd, *n2_p0_2nd);
+  RooDoubleCB dcrReso(Form("dcrReso_%s_iCat%d_%djet",chan.Data(), iCat, cate_vbf), "Double Crystal ball ", *mreco, *mzz, *mean_p0_2nd, *sigma_p0_2nd, *a1_p0_2nd, *n1_p0_2nd, *a2_p0_2nd, *n2_p0_2nd);
+  RooDoubleCB dcrReso_up(Form("dcrReso_%s_iCat%d_%djet_up",chan.Data(), iCat, cate_vbf), "dcb up", *mreco, *mzz, *mean_p0_2nd, *sigma_p0_up, *a1_p0_2nd, *n1_p0_2nd, *a2_p0_2nd, *n2_p0_2nd);
+  RooDoubleCB dcrReso_dn(Form("dcrReso_%s_iCat%d_%djet_dn",chan.Data(),iCat, cate_vbf), "dcb dn", *mreco, *mzz, *mean_p0_2nd, *sigma_p0_dn, *a1_p0_2nd, *n1_p0_2nd, *a2_p0_2nd, *n2_p0_2nd);
 
 	RooAbsReal *final_integral; 
 
@@ -374,8 +371,8 @@ if(onshell){
 	sigma->setVal(0.004);
 	r->setVal(1);
 
-//	convpdf_spline.plotOn(frame,LineColor(2));
-//	frame->Draw();
+	convpdf_spline.plotOn(frame,LineColor(2));
+	frame->Draw();
 
 	w.import(overall_intergral,RecycleConflictNodes());
 
@@ -397,7 +394,7 @@ void vh_quad9_mH125(TString chan="4e",unsigned int cate_vbf=1, bool onshell=1,in
 	gROOT->ProcessLine("gSystem->AddIncludePath(\"-I$ROOFITSYS/include/\")");
 	gROOT->ProcessLine("gSystem->Load(\"libRooFit\")");
 	gROOT->ProcessLine("gSystem->Load(\"libHiggsAnalysisCombinedLimit.so\")");
-for (int iCat=6; iCat<quad; iCat++){
+for (int iCat=0; iCat<quad; iCat++){
 	dosomething(chan,cate_vbf, onshell,quad,iCat);
 	}
 }
