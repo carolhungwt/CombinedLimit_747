@@ -108,18 +108,18 @@ void dosomething(TString chan ="2e2mu",unsigned int iCat =0,unsigned int cate_vb
 	TFile *fpdfbkg = new TFile("vbfpdfs"+ap+".root");
 	RooWorkspace *wbkg =( RooWorkspace*)fpdfbkg->Get ("w"); 
 
-	RooRealVar* mzz = new RooRealVar("ZZMass","M_{ZZ} (GeV)",125,low,high);
+	RooRealVar* mzz = new RooRealVar("ZZMass","M_{ZZ} (GeV)",125,low_reco,high_reco);
 //	RooRealVar* mzz = wbkg->var("ZZMass"); 
 	RooRealVar* mreco= new RooRealVar("mreco","M_{ZZ} (GeV)",125,low_reco,high_reco);
 	RooRealVar* mdiff= new RooRealVar("mdiff","M_{ZZ} (GeV)",125,low_reco,high_reco);
-  RooFormulaVar* x = new RooFormulaVar("xreso", "xreso", "@0-@1",RooArgList(*mreco,*mzz));
+
 	RooRealVar *r= new RooRealVar("r","signal strength",1.,0.000,1000);
 	RooRealVar *rvbf_ggh= new RooRealVar("rvbf_ggh","rvb_ggh",1.,0.000,1000);
 	RooFormulaVar *rvbf= new RooFormulaVar("rvbf","@0*@1",RooArgSet(*r,*rvbf_ggh));
 
 	RooRealVar* mean = new RooRealVar("mean_pole","mean_pole",125,100,180);
 	RooRealVar* sigma= new RooRealVar("sigma_pole","sigma_pole",0.00418,0.,10.);
-
+ 	RooFormulaVar* x = new RooFormulaVar("xreso", "xreso", "@0-@1",RooArgList(*mreco,*mean));
 	RooConstVar* mean_125= new RooConstVar("mean_125","mean_125",125);
 	RooConstVar* sigma_125= new RooConstVar("sigma_125","sigma_125",0.00407);
 
@@ -270,9 +270,9 @@ std::cout<<"***********************************"<<endl;
 
   RooFormulaVar* sigma_p0_up = new RooFormulaVar("sigma_p0_up", "", "@0+0.2*@0", *sigma_p0_2nd);
   RooFormulaVar* sigma_p0_dn = new RooFormulaVar("sigma_p0_dn", "", "@0-0.2*@0", *sigma_p0_2nd);
-  RooDoubleCB dcrReso(Form("dcrReso_%s_iCat%d_%djet",chan.Data(), iCat, cate_vbf), "Double Crystal ball ", *x, *mean_p0_2nd, *sigma_p0_2nd, *a1_p0_2nd, *n1_p0_2nd, *a2_p0_2nd, *n2_p0_2nd);
-  RooDoubleCB dcrReso_up(Form("dcrReso_%s_iCat%d_%djet_up",chan.Data(), iCat, cate_vbf), "dcb up", *x, *mean_p0_2nd, *sigma_p0_up, *a1_p0_2nd, *n1_p0_2nd, *a2_p0_2nd, *n2_p0_2nd);
-  RooDoubleCB dcrReso_dn(Form("dcrReso_%s_iCat%d_%djet_dn",chan.Data(),iCat, cate_vbf), "dcb dn", *x, *mean_p0_2nd, *sigma_p0_dn, *a1_p0_2nd, *n1_p0_2nd, *a2_p0_2nd, *n2_p0_2nd);
+  RooDoubleCB dcrReso(Form("dcrReso_%s_iCat%d_%djet",chan.Data(), iCat, cate_vbf), "Double Crystal ball ", *mreco, *mean, *mean_p0_2nd, *sigma_p0_2nd, *a1_p0_2nd, *n1_p0_2nd, *a2_p0_2nd, *n2_p0_2nd);
+  RooDoubleCB dcrReso_up(Form("dcrReso_%s_iCat%d_%djet_up",chan.Data(), iCat, cate_vbf), "dcb up", *mreco, *mean, *mean_p0_2nd, *sigma_p0_up, *a1_p0_2nd, *n1_p0_2nd, *a2_p0_2nd, *n2_p0_2nd);
+  RooDoubleCB dcrReso_dn(Form("dcrReso_%s_iCat%d_%djet_dn",chan.Data(),iCat, cate_vbf), "dcb dn", *mreco, *mean, *mean_p0_2nd, *sigma_p0_dn, *a1_p0_2nd, *n1_p0_2nd, *a2_p0_2nd, *n2_p0_2nd);
 	RooAbsReal *final_integral; 
 
 if(onshell){
