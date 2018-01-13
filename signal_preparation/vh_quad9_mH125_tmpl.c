@@ -271,7 +271,7 @@ std::cout<<"***********************************"<<endl;
 
 	RooAbsReal *final_integral; 
 
-if(onshell){
+//if(onshell){
 	Width_conv convpdf_spline(Form("VH_%s_iCat%d_%djet",chan.Data(),iCat, cate_vbf), Form("VH_%s_iCat%d_%djet",chan.Data(),iCat, cate_vbf),*mreco, *mean, *sigma, *rvbf, RooArgList(pdf_x, pdf_ggzz,dcrReso),*cosfunc, *sinfunc, *effxkf_sig,*effxkf_bkg); 
 	convpdf_spline.SetNameTitle("VH","VH");
 //	convpdf_spline.plotOn(frame);
@@ -281,7 +281,7 @@ if(onshell){
 	w.import(convpdf_spline_up,RecycleConflictNodes());
 	w.import(convpdf_spline_dn,RecycleConflictNodes());
 	final_integral = convpdf_spline.createIntegral(*mreco);
-}
+//}
 
 	mean->setVal(125);
 	mreco->setVal(126);

@@ -275,7 +275,7 @@ std::cout<<"***********************************"<<endl;
   RooDoubleCB dcrReso_dn(Form("dcrReso_%s_iCat%d_%djet_dn",chan.Data(),iCat, cate_vbf), "dcb dn", *mreco, *mean, *mean_p0_2nd, *sigma_p0_dn, *a1_p0_2nd, *n1_p0_2nd, *a2_p0_2nd, *n2_p0_2nd);
 	RooAbsReal *final_integral; 
 
-if(onshell){
+//if(onshell){
 	Width_conv convpdf_spline(Form("qqH_%s_iCat%d_%djet",chan.Data(),iCat, cate_vbf), Form("qqH_%s_iCat%d_%djet",chan.Data(),iCat, cate_vbf),*mreco, *mean, *sigma, *rvbf, RooArgList(pdf_x, pdf_ggzz,dcrReso),*cosfunc, *sinfunc, *effxkf_sig,*effxkf_bkg);
 	convpdf_spline.SetNameTitle("qqH","qqH"); 
 //	convpdf_spline.plotOn(frame);
@@ -285,12 +285,12 @@ if(onshell){
 	w.import(convpdf_spline_up,RecycleConflictNodes());
 	w.import(convpdf_spline_dn,RecycleConflictNodes());
 	final_integral = convpdf_spline.createIntegral(*mreco);
-}
+/*}
 else{
 	Width_conv_offshell convpdf_spline("bqqH", "bqqH",*mreco, *mean, *sigma, *rvbf, RooArgList(pdf_x, pdf_ggzz,dcrReso),*cosfunc, *sinfunc, *effxkf_sig,*effxkf_bkg); 
 	final_integral = convpdf_spline.createIntegral(*mreco);
 }
-
+*/
 	mean->setVal(125);
 	mreco->setVal(126);
 
