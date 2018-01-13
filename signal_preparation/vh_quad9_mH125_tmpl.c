@@ -138,7 +138,7 @@ void dosomething(TString chan ="2e2mu",unsigned int cate_vbf=1,bool onshell=true
 	TString pdfn = "2e2mu";
 	if(chan!="2e2mu")
 		pdfn = "4e";
-	RooKeysPdf *pdfbkg = wbkg->pdf("vbfpdfbkg_"+pdfn);
+	RooAbsPdf *pdfbkg = (RooAbsPdf*) wbkg->pdf("vbfpdfbkg_"+pdfn);
 
 	float zero_bkg = 0;
 	RooConstVar *ggzznorm= new RooConstVar("vhbkgnorm"+chan+Form("%d_%djet",iCat,cate_vbf),"",lumi*ggzz_xsec*zero_bkg);
