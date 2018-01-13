@@ -116,7 +116,7 @@ for(int kk=0; kk<6; kk++)	std::cout<<dcbPara_2nd[kk][0]<<endl;}
   TFile* fpdfbkg = new TFile("pdfs"+ap+".root");
   RooWorkspace* wbkg =(RooWorkspace*)fpdfbkg->Get("w");
 
-  eooRealVar* mzz = new RooRealVar("ZZMass","M_{ZZ} (GeV)",125,low_reco,high_reco);
+  RooRealVar* mzz = new RooRealVar("ZZMass","M_{ZZ} (GeV)",125,low_reco,high_reco);
 //  RooRealVar* mzz = wbkg->var("ZZMass");
   RooRealVar* mreco= new RooRealVar("mreco", "M_{ZZ} (GeV)", 125, low_reco, high_reco);
   //RooRealVar* mdiff= new RooRealVar("mdiff", "M_{ZZ} (GeV)", 125, low_reco, high_reco);
