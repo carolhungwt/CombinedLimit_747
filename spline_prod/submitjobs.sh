@@ -6,8 +6,6 @@ workdir=$PWD
 quad=9
 
 for ch in 4e 4mu 2e2mu; do
-cat=0
-while [ ${cat} -lt ${quad} ]; do
-#bsub -q 1nd make_rpdfWS.sh ${outdir} ${ch} ${workdir} ${cat}
-((cat++))
-done; done 
+bsub -q 1nd make_rpdfWS.sh ${outdir} ${ch} ${workdir} 
+
+done

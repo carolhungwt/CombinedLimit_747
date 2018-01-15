@@ -2,7 +2,10 @@
 outdir=$1
 quad=9
 workdir=$3
-cp  ${workdir}/make_rpdfWS_withCat.c .
+cd $CMSSW_BASE/src
+eval `scramv1 runtime -sh`
+cd ${workdir}
+#cp  ${workdir}/make_rpdfWS_withCat.c .
 
 cd ${workdir}
 
@@ -12,5 +15,5 @@ mkdir -p ${outdir}/rpdfWS_withCat
 fi
 
 tag=$2
-cat=$4
-root -l -q -b -n make_rpdfWS_withCat.c\(\"${workdir}\",\"${tag}\",${cat},${quad}\)
+
+root -l -q -b -n make_rpdfWS_withCat.c\(\"${workdir}\",\"${tag}\",${quad}\)
