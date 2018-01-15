@@ -12,7 +12,7 @@ cat=0
 while [ $cat -lt 9 ]
 do
 #root -l -q -b loadLib.C make_rpdfWS_withCat.cc\(\"${tag}\",${cat}\)
-root -l -q -b -n make_ggH_spline_withCat.c\(\"${tag}\",${cat},${quad},${inputdir}\)
+root -l -q -b -n make_ggH_spline_withCat.c\(\"${tag}\",${cat},${quad},\"${inputdir}\"\)
 ((cat+=1))
 done 
 done
