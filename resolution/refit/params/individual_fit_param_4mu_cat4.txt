@@ -1,0 +1,18 @@
+4mu_cat4_a1_param_0: 1.380544E+00
+4mu_cat4_a1_param_1: -2.670515E-03
+
+4mu_cat4_a2_param_0: 5.135258E-01
+4mu_cat4_a2_param_1: 1.387137E-02
+
+4mu_cat4_mean_param_0: 1.655726E+00
+4mu_cat4_mean_param_1: -2.162416E-02
+
+4mu_cat4_n1_param_0:  4.150825
+4mu_cat4_n1_param_1:  0
+
+4mu_cat4_n2_param_0: 1.070601E+01
+4mu_cat4_n2_param_1: -6.691299E-02
+
+4mu_cat4_sigma_param_0: 1.216038E+00
+4mu_cat4_sigma_param_1: 8.158903E-03
+

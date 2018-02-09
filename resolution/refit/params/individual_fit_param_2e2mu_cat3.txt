@@ -1,0 +1,18 @@
+2e2mu_cat3_a1_param_0: 1.774180E-01
+2e2mu_cat3_a1_param_1: 7.862852E-03
+
+2e2mu_cat3_a2_param_0: 8.068370E-01
+2e2mu_cat3_a2_param_1: 1.163137E-02
+
+2e2mu_cat3_mean_param_0: 1.567946E+00
+2e2mu_cat3_mean_param_1: -1.699395E-02
+
+2e2mu_cat3_n1_param_0: 6.270338E+00
+2e2mu_cat3_n1_param_1: -2.885285E-02
+
+2e2mu_cat3_n2_param_0: -6.237518E-01
+2e2mu_cat3_n2_param_1: 1.825012E-02
+
+2e2mu_cat3_sigma_param_0: -2.357908E-01
+2e2mu_cat3_sigma_param_1: 1.378060E-02
+

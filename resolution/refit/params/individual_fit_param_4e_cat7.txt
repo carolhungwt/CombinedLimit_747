@@ -1,0 +1,18 @@
+4e_cat7_a1_param_0: 8.812201E-01
+4e_cat7_a1_param_1: 3.583962E-03
+
+4e_cat7_a2_param_0: 1.238254E+00
+4e_cat7_a2_param_1: 9.021925E-03
+
+4e_cat7_mean_param_0: 6.258645E-01
+4e_cat7_mean_param_1: -7.521112E-03
+
+4e_cat7_n1_param_0: 4.469380E+00
+4e_cat7_n1_param_1: -1.838307E-02
+
+4e_cat7_n2_param_0: 4.083368E+00
+4e_cat7_n2_param_1: -1.829382E-02
+
+4e_cat7_sigma_param_0: 1.218487E-01
+4e_cat7_sigma_param_1: 1.017624E-02
+

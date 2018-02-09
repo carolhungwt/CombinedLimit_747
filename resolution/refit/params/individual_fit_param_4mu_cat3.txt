@@ -1,0 +1,18 @@
+4mu_cat3_a1_param_0: 7.221847E-01
+4mu_cat3_a1_param_1: 2.101581E-03
+
+4mu_cat3_a2_param_0: 3.744784E+00
+4mu_cat3_a2_param_1: -1.154579E-02
+
+4mu_cat3_mean_param_0: 8.676596E-01
+4mu_cat3_mean_param_1: -1.474270E-02
+
+4mu_cat3_n1_param_0: 4.999950E+00
+4mu_cat3_n1_param_1: -1.915611E-07
+
+4mu_cat3_n2_param_0: 6.111290E+00
+4mu_cat3_n2_param_1: -3.698726E-02
+
+4mu_cat3_sigma_param_0: 1.034178E+00
+4mu_cat3_sigma_param_1: 8.273922E-03
+
