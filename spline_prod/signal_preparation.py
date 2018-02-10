@@ -5,10 +5,12 @@ def prepare_rpdfWS_script(var='mass'):
 		ChosenVar = 'mean_pole'
 		NotChosenVar = 'sigma_pole'
 		varIndex = '0'
+		NotChosenVarVal = 0.00407
 	elif var == 'width':
 		ChosenVar = 'sigma_pole'
 		NotChosenVar = 'mean_pole'
 		varIndex = '2'
+		NotChosenVarVal = 125.
 	else:
 		raise Exception(var+" must be either 'mass' or 'width'")
 	if not os.path.exists('make_rpdfWS_withCat_tmpl.c'):
@@ -17,6 +19,7 @@ def prepare_rpdfWS_script(var='mass'):
 		fstr = f.read()
 		fstr = fstr.replace('<ChosenVar>',ChosenVar)
 		fstr = fstr.replace('<NotChosenVar>',NotChosenVar)
+		fstr = fstr.replace('<NotChosenVarVal>',str(NotChosenVarVal))
 		fstr = fstr.replace('<varIndex>',varIndex)
 		with open('make_rpdfWS_withCat.c','w') as fout:
 			fout.write(fstr)
@@ -40,7 +43,7 @@ if __name__=="__main__":
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-v','--var',required=True,help='Chosen Variable: mass or width')
 	parser.add_argument('-p','--process',action='append',help='Process 0: Prepare make_rpdfWS_withCat.c script 	1: submit jobs to make rpdfWS root files	 2: run make_ggH_spline_withCat')
-	parser.add_argument('-o','--outdir',required=True, help='output dir of rpdfWS root files. Will locate all rpdfWS root files at \{outdir\}/rpdfWS_withCat')
+	parser.add_argument('-o','--outdir', help='output dir of rpdfWS root files. Will locate all rpdfWS root files at \{outdir\}/rpdfWS_withCat', default=".")
 	args=parser.parse_args()
 	print args.process
 	if '0' in args.process:

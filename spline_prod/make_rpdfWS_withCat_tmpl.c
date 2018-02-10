@@ -100,7 +100,7 @@ RooNCSpline_2D_fast* make_2D_spPDF(std::vector<RooRealVar*> projvars, vector<vec
 	ofstream out("crosscheck"+tag+".txt");
 	vector<splineTriplet_t> points;
 	w->var("<NotChosenVar>")->setConstant(false);
-	w->var("<NotChosenVar>")->setVal(125);
+	w->var("<NotChosenVar>")->setVal(<NotChosenVarVal>);
 	w->var("<NotChosenVar>")->setConstant(true);
 		for(int ix=0; ix<ndim[<varIndex>]; ix++){
 			dim[0]=projvals.at(<varIndex>).at(ix);
