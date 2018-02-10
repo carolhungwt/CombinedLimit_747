@@ -265,13 +265,13 @@ void setVar(RooWorkspace* w, const int var, const float Val){
         w->var(curvar)->setVal(Val);
         w->var(curvar)->setConstant(true);
 }
-void make_rpdfWS_withCat(TString outdir=".", TString tag="4e", int cat = 0, int quad=9){
+void make_rpdfWS_withCat(TString outdir=".", TString tag="4e",int quad=9){
   
-//for(int cat =0; cat<quad; cat++){
+for(int cat =0; cat<quad; cat++){
 	for(int cate_vbf=0; cate_vbf<3; cate_vbf++){
  		for(int prod_cate=0; prod_cate<3; prod_cate++){
 	 		do_make_rpdfWS_withCat(outdir,tag, cat,quad, cate_vbf, prod_cate);
 		}
     	}
-  //}
+  }
 }

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #signal_preparation.py
 
 def prepare_rpdfWS_script(var='mass'):
