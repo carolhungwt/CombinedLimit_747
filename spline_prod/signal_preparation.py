@@ -35,7 +35,7 @@ def submitmakespline(outdir):
 		raise Exception(outdir+' does not exist')
 	if not os.path.exists('make_Sp_WS_withCat_all.sh'):
 		raise Exception('make_Sp_WS_withCat_all.sh not found')
-	os.system('bash make_Sp_WS_withCat_all.sh {outdir}'.format(outdir))
+	os.system('bsub -q 1nd -J make_Sp_WS_withCat_all  make_Sp_WS_withCat_all.sh {outdir}'.format(outdir=os.path.abspath(outdir)))
 
 
 import os, argparse
@@ -44,7 +44,7 @@ if __name__=="__main__":
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-v','--var',required=True,help='Chosen Variable: mass or width')
 	parser.add_argument('-p','--process',action='append',help='Process 0: Prepare make_rpdfWS_withCat.c script 	1: submit jobs to make rpdfWS root files	 2: run make_ggH_spline_withCat')
-	parser.add_argument('-o','--outdir', help='output dir of rpdfWS root files. Will locate all rpdfWS root files at \{outdir\}/rpdfWS_withCat', default=".")
+	parser.add_argument('-o','--outdir', help='output dir of rpdfWS root files. Will locate all rpdfWS root files at \{outdir\}/rpdfWS_withCat', default=".",type=str)
 	args=parser.parse_args()
 	print args.process
 	if '0' in args.process:

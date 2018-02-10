@@ -96,10 +96,7 @@ void do_make_ggH_spline_withCat(TString tag, int cat,int quad, TString workdir="
 	RooHistPdf *th2fhistpdf = new RooHistPdf(Form("histpdf_%s_sig_%s",tmplname.Data(),tag.Data()),"",argset,*th2fdatahist);
 //	RooProdPdf* tempprodpdf = new RooProdPdf("tempprodpdf","tempprodpdf",*temppdf, *tmplfuncpdf);
 
-	
-	if(prod_cate==0)	temppdf->SetNameTitle("r1_ggH","");
-	else 			temppdf->SetNameTitle("r1_qqH","");
-
+	temppdf->SetNameTitle(Form("r1_%s",pdfname),Form("r1_%s",pdfname));	
 	
 //	ggH = new RooRealSumPdf(pdfname.Data(), pdfname.Data(), RooArgList(*tempprodpdf), RooArgList(*tempcoeff)); 
 	RooProdPdf *ggH = new RooProdPdf(Form("%s_prodpdf",pdfname.Data()),"", *temppdf, Conditional(*th2fhistpdf,*dbkg));
