@@ -1,10 +1,25 @@
-#tag=$1
 #!/bin/env bash
-inputdir=$1
+workdir=$1
+workdir=$( readlink -e ${workdir} )
+cd $CMSSW_BASE/src
+eval `scramv1 runtime -sh`
+cd ${workdir}
+
+inputdir=${workdir}"/rpdfWS_withCat"
+
+#inputdir=${inputdir}"/rpdfWS_withCat"
 quad=9
 if [ ! -d "spline_WS_withCat_quad${quad}" ]; then
 mkdir -p spline_WS_withCat_quad${quad}
 fi
+
+
+notready=true
+echo $PWD
+while [ ${notready} == true ]; do
+numspline=$(find ./rpdfWS_withCat -maxdepth 1 -type f |wc -l)
+if [ ${numspline} -ne 243 ]; then sleep 1m; else notready=false; fi
+done
 
 for tag in 4e 4mu 2e2mu
 do
