@@ -1,9 +1,9 @@
-#replaceReso.py
-#!/bin/env/ python2
+#!/usr/bin/env python
 
 import argparse,os
 channels=['4e','2e2mu','4mu']
 files = ['clean_quad9_mH125','vbf_quad9_mH125','vh_quad9_mH125']
+withsysfiles = ['clean_quad9_mH125_withsys','vbf_quad9_mH125_withsys','vh_quad9_mH125_withsys']
 
 def readparams(chan,ifile):
   addtag = ''
@@ -23,11 +23,14 @@ if __name__=="__main__":
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-l','--loc',dest='loc',required=True)
 	parser.add_argument('-a','--arg')
+	parser.add_argument('--withsys', default=True)
 	args = parser.parse_args()
 	tempdict,cmdstr={},''
+	tmplcstr = '_withsys'
+	if not args.withsys: tmplcstr=''
 	for ifile in files:
 	  try:
-	    with open(ifile+'_tmpl.c','r') as fin:
+	    with open(ifile+tmplcstr+'_tmpl.c','r') as fin:	
 		cfilestr = fin.read()	
 		for chan in channels: 
 		  resostr = readparams(chan,ifile)
