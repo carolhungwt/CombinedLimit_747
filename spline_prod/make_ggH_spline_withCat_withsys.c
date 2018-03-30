@@ -90,13 +90,8 @@ void do_make_ggH_spline_withCat(TString tag, int cat,int quad, TString workdir="
 
 	cout<<temppdfr1Nominal<<" "<<temppdfr1ResUp<<" "<<temppdfr1ResDown<<" "<<temppdfr1ScaleUp<<" "<<temppdfr1ScaleDown<<endl;
 
-//	temppdfr1->SetName(Form("r1_%s_cat%d_%s%s",tag.Data(),cat,pdfname.Data(),tag.Data()));
 	tempcoeff = writeFormula(ws,r, tag,cat,cate_vbf,prod_cate);
 	
-	//ggH_norm = (RooFormulaVar*) ws->obj(Form("%s%s_norm",pdfname.Data(),tag1.Data()));
-
-//	RooRealFlooredSumPdf *temppdf = new RooRealFlooredSumPdf(Form("r1_%s_cat%d_%s%s",tag.Data(),cat,pdfname.Data(),tag.Data()),"",RooArgList(*temppdfr1),RooArgList(*constone));	
-
 	//Coefficient list
 	TString coeffname = "e";
 	if(tag=="4mu")  coeffname = "mu";
@@ -110,8 +105,7 @@ void do_make_ggH_spline_withCat(TString tag, int cat,int quad, TString workdir="
 	funclist.add(*temppdfr1ScaleDown);
 
 	coefflist.add(*CMS_res);
-	coefflist.add(*CMS_scale);	
-	cout<<funclist.getSize()<<"  "<<coefflist.getSize()<<endl;
+	coefflist.add(*CMS_scale);		
 
 	VerticalInterpPdf* temppdf = new VerticalInterpPdf(Form("%s%d_%s_VerticalInterp",tag.Data(),cat,pdfname.Data()),"",funclist,coefflist);
 
