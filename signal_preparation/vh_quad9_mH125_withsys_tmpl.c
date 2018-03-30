@@ -294,10 +294,10 @@ std::cout<<"***********************************"<<endl;
 	convpdf_spline.SetNameTitle("VH","VH");
 //	convpdf_spline.plotOn(frame);
 	w.import(convpdf_spline,RecycleConflictNodes());
-	Width_conv convpdf_spline_up("VH_Res"+chan+"Up", "VH_Res"+chan+"Up",*mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz,dcrReso_up),*cosfunc, *sinfunc, *effxkf_sig,*effxkf_bkg); 
-	Width_conv convpdf_spline_dn("VH_Res"+chan+"Down", "VH_Res"+chan+"Down",*mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz,dcrReso_dn),*cosfunc, *sinfunc, *effxkf_sig,*effxkf_bkg); 
-	Width_conv convpdf_spline_mean_up("VH_Scale"+chan+"Up", "VH_Scale"+chan+"Up",*mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz,dcrScale_up),*cosfunc, *sinfunc, *effxkf_sig,*effxkf_bkg);
-        Width_conv convpdf_spline_mean_dn("VH_Scale"+chan+"Down", "VH_Scale"+chan+"Down",*mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz,dcrScale_dn),*cosfunc, *sinfunc, *effxkf_sig,*effxkf_bkg);
+	Width_conv convpdf_spline_up("VH_ResUp", "VH_Res"+chan+"Up",*mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz,dcrReso_up),*cosfunc, *sinfunc, *effxkf_sig,*effxkf_bkg); 
+	Width_conv convpdf_spline_dn("VH_ResDown", "VH_Res"+chan+"Down",*mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz,dcrReso_dn),*cosfunc, *sinfunc, *effxkf_sig,*effxkf_bkg); 
+	Width_conv convpdf_spline_mean_up("VH_ScaleUp", "VH_Scale"+chan+"Up",*mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz,dcrScale_up),*cosfunc, *sinfunc, *effxkf_sig,*effxkf_bkg);
+        Width_conv convpdf_spline_mean_dn("VH_ScaleDown", "VH_Scale"+chan+"Down",*mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz,dcrScale_dn),*cosfunc, *sinfunc, *effxkf_sig,*effxkf_bkg);
 
 	w.import(convpdf_spline_up,RecycleConflictNodes());
 	w.import(convpdf_spline_dn,RecycleConflictNodes());
@@ -374,14 +374,14 @@ std::cout<<"***********************************"<<endl;
 
 	cout<< sig_intergral.getVal()<<"\t"<< bkg_integral->getVal()<<"\t"<<inter_intergral.getVal()<<endl;
 
-	Width_conv_integral convpdf_spline_integral("VH", "VH",*mreco, *mean, *sigma, *rvbf, RooArgList(pdf_x, pdf_ggzz,dcrReso,*hsigfunc,*hintfunc),*cosfunc, *sinfunc, *effxkf_sig,*effxkf_bkg); 
+/*	Width_conv_integral convpdf_spline_integral("VH", "VH",*mreco, *mean, *sigma, *rvbf, RooArgList(pdf_x, pdf_ggzz,dcrReso,*hsigfunc,*hintfunc),*cosfunc, *sinfunc, *effxkf_sig,*effxkf_bkg); 
 	Width_conv_integral convpdf_spline_integral_up("VH_Res"+chan+"Up", "VH_Res"+chan+"Up",*mreco, *mean, *sigma, *rvbf, RooArgList(pdf_x, pdf_ggzz,dcrReso_up,*hsigfunc,*hintfunc),*cosfunc, *sinfunc, *effxkf_sig,*effxkf_bkg); 
 	Width_conv_integral convpdf_spline_integral_dn("VH_Res"+chan+"Down", "VH_Res"+chan+"Down",*mreco, *mean, *sigma, *rvbf, RooArgList(pdf_x, pdf_ggzz,dcrReso_dn,*hsigfunc,*hintfunc),*cosfunc, *sinfunc, *effxkf_sig,*effxkf_bkg); 
 
 	w.import(convpdf_spline_integral,RecycleConflictNodes());
 	w.import(convpdf_spline_integral_up,RecycleConflictNodes());
 	w.import(convpdf_spline_integral_dn,RecycleConflictNodes());
-	overall_intergral.plotOn(frame_width);
+*/	overall_intergral.plotOn(frame_width);
 	frame_width->Draw();
 
 	mzz->setConstant(0);

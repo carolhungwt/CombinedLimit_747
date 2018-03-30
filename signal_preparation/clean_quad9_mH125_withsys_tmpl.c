@@ -312,13 +312,16 @@ std::cout<<"***********************************"<<endl;
   ///return;
   RooAbsPdf* convpdf_spline;
   RooAbsReal* final_integral;
+
+
+
   if (onshell){
     convpdf_spline = new Width_conv("ggH"+strSystTitle[f]+Form("_%s_iCat%d_%djet",chan.Data(),iCat, cate_vbf), "ggH"+strSystTitle[f], *mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz, dcrReso), *phase_cos_fix, *phase_sin_fix, *effxkf_sig, *effxkf_bkg);
     convpdf_spline->SetNameTitle("ggH", "ggH");
-    Width_conv convpdf_spline_up("ggH_Res"+chan+"Up", "ggH"+chan+"Up", *mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz, dcrReso_up), *phase_cos_fix, *phase_sin_fix, *effxkf_sig, *effxkf_bkg);
-    Width_conv convpdf_spline_dn("ggH_Res"+chan+"Down", "ggH"+chan+"Down", *mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz, dcrReso_dn), *phase_cos_fix, *phase_sin_fix, *effxkf_sig, *effxkf_bkg);
-    Width_conv convpdf_spline_mean_up("ggH_Scale"+chan+"Up","ggH_mean"+chan+"Up",*mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz, dcrmean_up), *phase_cos_fix, *phase_sin_fix, *effxkf_sig, *effxkf_bkg);
-    Width_conv convpdf_spline_mean_dn("ggH_Scale"+chan+"Down","ggH_mean"+chan+"Down",*mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz, dcrmean_dn), *phase_cos_fix, *phase_sin_fix, *effxkf_sig, *effxkf_bkg);
+    Width_conv convpdf_spline_up("ggH_ResUp", "ggH"+chan+"Up", *mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz, dcrReso_up), *phase_cos_fix, *phase_sin_fix, *effxkf_sig, *effxkf_bkg);
+    Width_conv convpdf_spline_dn("ggH_ResDown", "ggH"+chan+"Down", *mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz, dcrReso_dn), *phase_cos_fix, *phase_sin_fix, *effxkf_sig, *effxkf_bkg);
+    Width_conv convpdf_spline_mean_up("ggH_ScaleUp","ggH_mean"+chan+"Up",*mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz, dcrmean_up), *phase_cos_fix, *phase_sin_fix, *effxkf_sig, *effxkf_bkg);
+    Width_conv convpdf_spline_mean_dn("ggH_ScaleDown","ggH_mean"+chan+"Down",*mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz, dcrmean_dn), *phase_cos_fix, *phase_sin_fix, *effxkf_sig, *effxkf_bkg);
 /*  
 //Only for 2e2mu 
 //To account for 2mu systematics, not really implemented
@@ -409,13 +412,13 @@ std::cout<<"***********************************"<<endl;
   RooFormulaVar overall_integral("ggH_norm"+strSystTitle[f], "", "@0*@2+ @1 + sqrt(@2)*@3", RooArgList(sig_integral, *bkg_integral, *r, inter_integral));
   if (f==0) overall_integral.SetNameTitle("ggH_norm", "ggH_norm");
 
-  Width_conv_integral* convpdf_spline_integral=new Width_conv_integral("ggH", "ggH", *mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz, dcrReso, *hsigfunc, *hintfunc), *phase_cos_fix, *phase_sin_fix, *effxkf_sig, *effxkf_bkg);
+/*  Width_conv_integral* convpdf_spline_integral=new Width_conv_integral("ggH", "ggH", *mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz, dcrReso, *hsigfunc, *hintfunc), *phase_cos_fix, *phase_sin_fix, *effxkf_sig, *effxkf_bkg);
   Width_conv_integral convpdf_spline_integral_up("ggH_Res"+chan+"Up", "ggH"+chan+"Up", *mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz, dcrReso_up, *hsigfunc, *hintfunc), *phase_cos_fix, *phase_sin_fix, *effxkf_sig, *effxkf_bkg);
   Width_conv_integral convpdf_spline_integral_dn("ggH_Res"+chan+"Down", "ggH"+chan+"Down", *mreco, *mean, *sigma, *r, RooArgList(pdf_x, pdf_ggzz, dcrReso_dn, *hsigfunc, *hintfunc), *phase_cos_fix, *phase_sin_fix, *effxkf_sig, *effxkf_bkg);
   w.import(*convpdf_spline_integral, RecycleConflictNodes());
   w.import(convpdf_spline_integral_up, RecycleConflictNodes());
   w.import(convpdf_spline_integral_dn, RecycleConflictNodes());
-
+*/
   mean->setVal(125);
   sigma->setVal(0.004);
   cout << "Signal: \t Background: \t Interference: \t" <<endl;
